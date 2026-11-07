@@ -9,6 +9,7 @@ import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { checkTransfer } from "./transfer-check.mjs";
+import { checkSwStall } from "./sw-check.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const results = [];
@@ -103,6 +104,7 @@ check("README の URL のすぐ後ろに全角の字を続けない（Link check
   const shell = JSON.parse(sw.match(/SHELL = (\[[^\]]+\])/)[1]);
   check("PWA：sw.js は画面のファイルを全部保存し（引き継ぎの transfer.js も）、外へ何も送らない", ["./index.html", "./data.js", "./transfer.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"].every((f) => shell.includes(f)) && !/https?:\/\//.test(sw.replace(/^\/\/.*$/gm, "")));
   check("PWA：install は取り直して保存する（cache: reload）", /new Request\(u, \{ cache: "reload" \}\)/.test(sw));
+  { const st = await checkSwStall(sw); check("PWA：本文の途中で通信が止まっても4秒で保存したものを返す・ふつうはネットの返事", st.ok, JSON.stringify(st)); }
   check("PWA：manifest にアイコン2つと名前がある", mf.name === "手当てじゅんばん" && mf.icons.length >= 2 && mf.start_url === "./"); }
 
 // ---- 3. ブラウザで遊ぶ ----
