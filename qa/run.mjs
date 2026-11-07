@@ -222,6 +222,27 @@ try {
     const lvs = await p.evaluate((l) => l.map((x) => G.BY[x.split("|")[0]]?.lv), pl);
     check(`練習「${t}」を押すと、その難しさの場面が並ぶ画面になる`, pl.length > 0 && lvs.every((v) => v !== undefined && (t === "all" || v === +t)) && await p.locator(".cd").count() > 0);
   }
+  // 分野のボタンも全部押す（2026-11-07 CodeRabbit）
+  for (const c of Object.keys(G.CAT)) {
+    await p.click("#back"); await p.click("#go-p"); await p.click(`.lv button[data-c="${c}"]`);
+    const pl = await p.evaluate(() => (__tj.load().runs.p || {}).list || []);
+    check(`練習の分野「${c}」を押すと、その分野の場面が並ぶ画面になる`, pl.length > 0 && pl.every((t) => G.BY[t.split("|")[0]]?.cat === c) && await p.locator(".cd").count() > 0);
+  }
+  // 練習の並びは何百回作っても、毎回5つのちがう正しい場面（分野は場面の数まで）
+  {
+    const bad = await p.evaluate(() => {
+      const G = __tj.G, s = __tj.load(), out = [];
+      const opts = [0, 1, 2, "all", ...Object.keys(G.CAT).map((c) => "cat:" + c)];
+      for (const o of opts) for (let i = 0; i < 400; i++) {
+        const ids = __tj.practiceList(o, s).map((t) => t.split("|")[0]);
+        const pool = o === "all" ? G.SCENES : typeof o === "number" ? G.SCENES.filter((x) => x.lv === o) : G.SCENES.filter((x) => x.cat === o.slice(4));
+        const want = Math.min(5, pool.length);
+        if (ids.length !== want || new Set(ids).size !== want || !ids.every((id) => pool.some((x) => x.id === id))) { out.push(o + ":" + ids.join(",")); break; }
+      }
+      return out;
+    });
+    check("練習の並びは400回ずつ作っても、毎回ちがう正しい場面が5つ（分野は場面の数まで）", bad.length === 0, bad.join(" "));
+  }
   // 手当て帳 → 見直し → その場面を並べる
   await p.click("#back"); await p.click("#go-dex");
   const firstId = await p.getAttribute(".book button", "data-k");
