@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="ja" class="fs2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'">
+<title>手当てじゅんばん</title>
+<meta name="description" content="やけど・切りきず・熱中症・人が倒れたとき。応急手当てのカードを正しい順に並べる1日5問。消防庁などの資料にもとづく学習ゲーム。">
+<meta name="theme-color" content="#f3efe6">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="手当てじゅんばん">
+<meta property="og:title" content="手当てじゅんばん：応急手当て、どの順でする？">
+<meta property="og:description" content="手当てのカードを正しい順に並べる1日5問。やってはいけない手当ても見ぬく。">
+<meta property="og:url" content="https://satou-aaaaa.github.io/teate-junban/">
+<meta property="og:image" content="https://satou-aaaaa.github.io/teate-junban/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="手当てじゅんばん：応急手当てを正しい順に並べるゲーム">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* 救急箱のふた：生成りの地に深い緑青と朱。札は手帳の付せんのように */
+:root{
+  --bg:#f3efe6; --paper:#fffdf8; --ink:#1d2b36; --ink2:#4c5662; --line:#1d2b3626;
+  --ao:#0f5f58; --ao2:#083f3a; --shu:#b5431f; --shu2:#842c12; --ok:#25734a; --ok2:#174f31; --gold:#966708;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;
+  color-scheme:light;
+}
+html.fs1{font-size:16px}html.fs2{font-size:18px}html.fs3{font-size:22px}
+html{height:100%}body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-weight:500;-webkit-tap-highlight-color:transparent;line-height:1.6}
+.wrap{max-width:540px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 88px;display:flex;flex-direction:column;gap:14px;min-height:100vh;box-sizing:border-box}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:52px}
+h1{font-weight:900;font-size:1.15rem;margin:0;letter-spacing:.04em;flex:1;min-width:0}
+h1 small{display:block;font-size:.75rem;letter-spacing:0;color:var(--ink2);font-weight:500;line-height:1.3}
+.icon{all:unset;cursor:pointer;font-size:1.2rem;min-width:52px;height:52px;display:grid;place-items:center;border-radius:12px;border:2px solid var(--line);box-sizing:border-box;padding:0 10px;background:var(--paper);font-weight:700}
+button.main{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:60px;border-radius:16px;background:var(--shu);color:#fff;font-weight:900;font-size:1.05rem;padding:8px 18px;text-align:center;box-shadow:0 5px 0 var(--shu2);line-height:1.35;flex-wrap:wrap}
+button.main:active{transform:translateY(3px);box-shadow:0 2px 0 var(--shu2)}
+button.main.alt{background:var(--ao);box-shadow:0 5px 0 var(--ao2)}
+button.main.ok{background:var(--ok);box-shadow:0 5px 0 var(--ok2)}
+button.main small{font-weight:500;font-size:.8rem}
+button.sub{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;min-height:52px;border-radius:14px;border:2px solid var(--line);background:var(--paper);color:var(--ink);font-weight:700;font-size:.95rem;padding:4px 12px;text-align:center;line-height:1.3}
+button.sub:disabled,button.main:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px}.row>.sub,.row>.main{flex:1 1 0}
+.note{color:var(--ink2);font-size:.85rem;line-height:1.7;margin:0;text-align:center}
+.note a,.about a,.src a{color:var(--shu2);display:inline-flex;align-items:center;min-height:44px}
+.big{font-weight:900;font-size:1.45rem;text-align:center;margin:0;line-height:1.35}
+.title{font-weight:900;font-size:2rem;letter-spacing:.1em;text-align:center;margin:6px 0 0;color:var(--ao2);line-height:1.3}
+.title span{color:var(--shu)}
+.lead{text-align:center;color:var(--ink2);margin:0;font-size:.95rem;line-height:1.7}
+.kit{display:flex;justify-content:center;gap:.5rem;font-size:1.8rem}
+.fsrow{display:flex;gap:6px;align-items:center;justify-content:center;font-size:.85rem;color:var(--ink2)}
+.fsrow button{all:unset;box-sizing:border-box;cursor:pointer;min-width:52px;min-height:48px;display:grid;place-items:center;border-radius:10px;border:2px solid var(--line);background:var(--paper);font-weight:900;color:var(--ink)}
+.fsrow button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.warn{background:var(--paper);border:2px solid var(--shu);border-radius:14px;padding:.55rem .9rem;font-size:.85rem;line-height:1.7;text-align:left}
+.warn b{color:var(--shu2)}
+/* 場面 */
+.scene{background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:.9rem 1rem;display:grid;grid-template-columns:auto 1fr;gap:.2rem .9rem;align-items:center;box-shadow:0 6px 16px #1d2b3618}
+.scene .em{font-size:2.6rem;grid-row:span 2;line-height:1}
+.scene b{font-size:1.05rem;color:var(--ao2)}
+.scene p{margin:0;font-size:1rem;line-height:1.6}
+/* 並べた順（①②③…） */
+.slots{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.slots li{display:grid;grid-template-columns:2rem 1fr;align-items:center;gap:8px;min-height:2.8rem;border-radius:12px;padding:.3rem .7rem;background:#ffffff99;border:2px dashed #1d2b3640;color:var(--ink2);font-size:.95rem}
+.slots li .no{font-weight:900;font-size:1.1rem;text-align:center;color:var(--ink2)}
+.slots li.got{background:#e9f4ef;border:2px solid var(--ok);color:var(--ink);animation:pop .35s}
+.slots li.got .no{color:var(--ok2)}
+.slots li small{display:block;color:var(--ink2);font-size:.8rem;line-height:1.5}
+/* 札 */
+.q{margin:0;font-weight:700;font-size:.95rem;text-align:center}
+.cards{display:flex;flex-direction:column;gap:10px}
+.cd{all:unset;box-sizing:border-box;cursor:pointer;position:relative;min-height:3.6rem;display:flex;align-items:center;gap:.6rem;border-radius:14px;background:#fff;border:3px solid var(--ao);box-shadow:0 4px 0 #0f5f5855;font-weight:700;font-size:1.05rem;color:var(--ink);padding:.5rem .9rem;line-height:1.45}
+.cd:active{transform:translateY(3px);box-shadow:0 1px 0 #0f5f5855}
+.cd .mk{flex:0 0 auto;font-size:1.1rem}
+.cd.used{display:none}
+.cd.ng{opacity:.6;border-color:var(--shu);border-style:dashed;box-shadow:none;cursor:default;text-decoration:line-through;text-decoration-thickness:2px}
+.cd.ng::after{content:"✕ しない";position:absolute;top:2px;right:8px;font-size:.72rem;font-weight:900;color:var(--shu2);text-decoration:none}
+.cd.hl{border-color:var(--gold);border-width:4px;background:#fff8e6}
+.cd.hl .mk::before{content:"👉"}
+.cd.shake{animation:shake .4s}
+.cd:disabled{cursor:default}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes pop{40%{transform:scale(1.04)}}
+@keyframes up{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.msg{min-height:1.6rem;text-align:center;font-weight:700;font-size:1rem;margin:0;line-height:1.6}
+.msg.bad{color:var(--shu2)}.msg.good{color:var(--ok2)}
+.verdict{background:var(--paper);border:2px solid var(--ok);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 0 #1d2b3620;animation:up .35s ease-out}
+.verdict .hd{display:flex;justify-content:center;align-items:baseline;gap:10px;font-size:1.3rem;font-weight:900;flex-wrap:wrap}
+.verdict ol{margin:0;padding-left:1.5em;display:flex;flex-direction:column;gap:6px;font-size:.95rem;line-height:1.6}
+.verdict ol small,.verdict .nglist small{display:block;color:var(--ink2);font-size:.82rem}
+.verdict .nglist{margin:0;padding:0;list-style:none;font-size:.95rem;display:flex;flex-direction:column;gap:6px}
+.verdict .nglist li::before{content:"✕ ";color:var(--shu2);font-weight:900}
+.verdict h3{margin:.2rem 0 0;font-size:.9rem;color:var(--ao2)}
+.call{background:#fff4ef;border-left:5px solid var(--shu);border-radius:8px;padding:.4rem .7rem;font-size:.88rem;margin:0}
+.src{font-size:.75rem;color:var(--ink2);margin:0;line-height:1.5}
+.src a{min-height:44px}
+.hint{background:var(--paper);border:2px solid var(--gold);border-radius:14px;padding:.6rem .9rem;font-size:.95rem;line-height:1.7}
+.stars{color:var(--gold);letter-spacing:.08em;font-size:1.2rem}
+.stars .off{color:#1d2b3633}
+.dots{display:flex;gap:6px;flex:1;max-width:200px}
+.dots i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.dots i.on{background:var(--shu);height:12px}.dots i.done{background:var(--ao)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center}
+.stats b{display:block;font-size:1.3rem}
+.stats small{color:var(--ink2);font-size:.75rem}
+.share{background:var(--paper);border-radius:12px;padding:12px;white-space:pre-line;font-size:1rem;line-height:1.6;text-align:center;border:2px solid var(--line)}
+.shares{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.shares a,.shares button{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;border:2px solid var(--line);background:var(--paper);color:var(--ink);font-size:.9rem;font-weight:700;text-decoration:none;padding:0 6px;box-sizing:border-box;font-family:inherit;cursor:pointer}
+.rlist{display:flex;flex-direction:column;gap:8px}
+.rlist div{display:flex;align-items:center;gap:10px;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.9rem;line-height:1.5}
+.rlist .w{flex:1;min-width:0}
+.rlist .w b{display:block;font-size:.95rem}
+.achnext{text-align:center;font-size:.9rem;color:var(--ink2);margin:0}
+.achnew{text-align:center;font-size:.95rem;font-weight:700;color:var(--shu2);margin:0;animation:up .35s ease-out}
+.badge{background:var(--shu);color:#fff;border-radius:9px;padding:1px 7px;font-size:.75rem}
+.lv{display:flex;flex-direction:column;gap:10px}
+/* 手当て帳 */
+.book{display:flex;flex-direction:column;gap:8px}
+.book button,.book .no{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:2.2rem 1fr auto;align-items:center;gap:10px;min-height:56px;border-radius:12px;padding:6px 12px;background:var(--paper);border:2px solid var(--line);font-size:.95rem}
+.book .no{cursor:default;color:var(--ink2);border-style:dashed}
+.book .mk{font-size:1.3rem;text-align:center}
+.book .ct{font-size:.8rem;color:var(--ink2);white-space:nowrap}
+.agrp{font-size:.85rem;color:var(--ink2);margin:4px 0 -6px;font-weight:700;letter-spacing:.1em}
+.alist{display:flex;flex-direction:column;gap:8px}
+.ach{display:grid;grid-template-columns:1.8rem 1fr auto;grid-template-areas:"ic nm pg" "ic cd cd" "ic br br";align-items:center;gap:3px 10px;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.ach .ic{grid-area:ic;font-size:1.2rem;text-align:center}
+.ach b{grid-area:nm;font-size:.95rem}.ach small{grid-area:cd;color:var(--ink2);font-size:.8rem;line-height:1.4}
+.ach .pg{grid-area:pg;font-size:.8rem;color:var(--ink2);white-space:nowrap}
+.ach .bar{grid-area:br;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.ach .bar i{display:block;height:100%;background:var(--ao)}
+.ach.got{background:#e9f4f2;border-color:var(--ao)}
+.ach:not(.got) .ic{filter:grayscale(1);opacity:.5}
+.calnav{display:flex;align-items:center;gap:8px}.calnav b{flex:1;text-align:center;font-size:1.05rem}.calnav .sub{flex:0 0 72px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .wd{font-size:.7rem;color:var(--ink2);text-align:center}
+.cal .c{all:unset;box-sizing:border-box;min-height:48px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.9rem;background:var(--paper);border:1px solid var(--line);position:relative;line-height:1.1}
+.cal .c i{font-style:normal;font-size:.55rem;letter-spacing:-.05em;color:var(--gold)}
+.cal .c.p1{background:#e9f4f2}.cal .c.p2{background:#cde6e2}.cal .c.p3{background:var(--ao);color:#fff;border-color:var(--ao2)}.cal .c.p3 i{color:#ffe9a8}
+.cal .c.late{background:transparent;border:1.5px dashed var(--ao);color:var(--ao2)}
+.cal .c.miss{cursor:pointer;border:2px dashed var(--shu);color:var(--shu2);background:#fff}
+.cal .c.miss i{color:var(--shu)}
+.cal .c.today{border:2px solid var(--ink)}
+.cal .c .hd{position:absolute;right:2px;top:1px;font-size:.55rem;color:var(--shu);font-weight:900}
+.cal .c.p3 .hd{color:#ffe9a8}
+.cal .c.off{visibility:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;font-size:.75rem;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:4px}.legend em{display:inline-block;width:14px;height:14px;border-radius:4px;font-style:normal}
+.about h3{font-size:1rem;margin:.6rem 0 .2rem;color:var(--ao2)}
+.about p,.about li{font-size:.92rem;line-height:1.8;text-align:left}
+.about ul{padding-left:1.2em;margin:0}
+.review{background:var(--paper);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.review ol{margin:0;padding-left:1.5em;line-height:1.7}
+.review ol small{display:block;color:var(--ink2);font-size:.82rem}
+dialog#howto{border:none;border-radius:16px;background:var(--paper);color:var(--ink);max-width:440px;width:calc(100% - 32px);padding:20px;box-sizing:border-box;font-size:1rem}
+dialog#howto::backdrop{background:#000000aa}
+dialog#howto h2{margin:0 0 10px;letter-spacing:.1em}
+dialog#howto ol{padding-left:1.3em;margin:0 0 12px;line-height:1.8}
+dialog#howto p{margin:0 0 10px;font-size:.9rem;line-height:1.7;color:var(--ink2)}
+dialog#howto a{color:var(--shu2);min-height:44px;display:inline-flex;align-items:center}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;z-index:9;box-shadow:0 6px 20px #0005;max-width:90%;text-align:center;font-size:1rem}
+footer{margin-top:auto;text-align:center;font-size:.8rem;color:var(--ink2);display:flex;gap:4px 14px;justify-content:center;flex-wrap:wrap}
+footer a{color:var(--ink2);min-height:44px;display:inline-flex;align-items:center}
+/* 色の見分けを助ける：しないの札は朱→橙と太い破線、正しく置いた札は青 */
+html.a11y-cvd .cd.ng{border-color:#b85a00;border-width:4px}
+html.a11y-cvd .slots li.got{border-color:#0072b2;background:#e8f2fa}
+html.a11y-cvd .slots li.got .no{color:#005a8c}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+:is(.icon,button,a):focus-visible{outline:3px solid var(--shu)!important;outline-offset:2px}
+</style>
+<!-- a11y:begin 見やすさの設定 v5（shared-workflows template/a11y/a11y.html の写し。ここでは直さず、ひな形を直して全部のゲームへ写す。drift-check と qa/a11y.mjs が同じ中身か見る） -->
+<style id="a11y-css">
+/* だれでも：キーボードで選んだ所に太い枠（WCAG 2.4.7・2.4.13） */
+:is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid #1a5fd0!important;outline-offset:2px!important;box-shadow:0 0 0 5px #fff!important}
+/* 読みやすい文字：UD フォント・行間 1.7・字間を少し広げる・斜体にしない（BDA Dyslexia Style Guide） */
+html.a11y-read body{line-height:1.7}
+html.a11y-read body,html.a11y-read body :where(*:not(svg):not(svg *):not([data-a11y-keepfont]):not([data-a11y-keepfont] *)){font-family:"BIZ UDPGothic","BIZ UDGothic","UD デジタル 教科書体 NK-R","UD Digi Kyokasho NK-R","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,sans-serif!important;font-style:normal!important}
+html.a11y-read :is(p,li,dd,dt,blockquote,[data-a11y-say]){line-height:1.8!important;letter-spacing:.04em!important}
+html.a11y-read em,html.a11y-read i:not([aria-hidden]){font-style:normal!important;font-weight:700}
+/* 動きを減らす：揺れ・点滅・すべる動きを止める（WCAG 2.3.3。端末の「視差効果を減らす」でも自動で入る） */
+html.a11y-calm *,html.a11y-calm *::before,html.a11y-calm *::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
+/* 色の見分けを助ける：ゲームごとの形・模様は各ゲームが html.a11y-cvd の下に書く。ここではリンクに下線 */
+html.a11y-cvd a{text-decoration:underline!important}
+/* ふりがな：ゲームが <ruby class="a11y-rb"> を置いた所だけ。選んだときだけ出す */
+html:not(.a11y-ruby) ruby.a11y-rb>rt{display:none}
+/* 設定の画面（どのゲームでも同じ見た目・同じ濃さ。白地に黒で 15:1） */
+.a11y-dlg{max-width:min(420px,calc(100vw - 32px));width:100%;box-sizing:border-box;border:2px solid #1d2320;border-radius:14px;padding:18px 16px 14px;background:#fffdf8;color:#1d2320;font:500 16px/1.6 "BIZ UDPGothic","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif;letter-spacing:0}
+.a11y-dlg::backdrop{background:#0008}
+.a11y-dlg h2{font-size:19px;margin:0 0 4px;font-weight:700;line-height:1.4}
+.a11y-dlg p{margin:4px 0 10px;font-size:14px;color:#3d4440;line-height:1.6}
+.a11y-dlg label{display:flex;gap:12px;align-items:center;min-height:48px;padding:6px 4px;border-top:1px solid #1d232022;cursor:pointer;line-height:1.4}
+.a11y-dlg label small{display:block;font-size:13px;color:#3d4440}
+.a11y-dlg input[type=checkbox]{width:26px;height:26px;flex:none;accent-color:#1a5fd0;margin:0}
+.a11y-dlg .a11y-row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.a11y-dlg button,.a11y-btn,.a11y-saybtn{min-height:44px;min-width:44px;border-radius:10px;border:2px solid #1d2320;background:#fff;color:#1d2320;font:700 15px/1.2 "BIZ UDPGothic","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif;padding:0 14px;cursor:pointer;letter-spacing:0}
+.a11y-dlg button.a11y-ok{background:#1d2320;color:#fff}
+.a11y-btn.a11y-float{position:fixed;left:max(8px,env(safe-area-inset-left,0px));bottom:max(8px,env(safe-area-inset-bottom,0px));z-index:2147483000}
+/* 読み上げボタンが、いちばん下のボタン・リンクにかぶらないよう下をあける */
+html.a11y-say body{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))!important}
+.a11y-saybtn{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:max(8px,env(safe-area-inset-bottom,0px));z-index:2147483000;box-shadow:0 2px 8px #0003}
+.a11y-saybtn[hidden],.a11y-dlg [hidden]{display:none!important}
+.a11y-note{font-size:13px!important}
+</style>
+<script id="a11y-script">
+/* 見やすさの設定（色覚・ディスレクシア・弱視・動きに弱い人のため）。外へは何も送らない。
+   設定は localStorage の a11y-v1 に置く。同じサイト（satou-aaaaa.github.io）のゲームは同じ設定を使う。
+   ゲームの側でできること：
+   - 設定を開くボタンに data-a11y-open を付ける（無ければ左下に「Aa」のボタンを出す）
+   - 読み上げる文に data-a11y-say を付ける（問題文・知らせなど）
+   - 色の見分けを助ける形・模様は html.a11y-cvd の下に CSS で書く。JS では A11y.on('cvd')
+   - 揺れ・すべる動きを JS で動かすときは、A11y.on('calm') なら止める
+   - 設定が変わると document に a11ychange が届く
+   - 設定の印は html の class「a11y-<設定の名前>」（a11y-read など）。部品の class はこれと重ならない名前にする（2026-11-05 a11y-say がボタンとぶつかった） */
+(() => {
+  const KEY = "a11y-v1";
+  const root = document.documentElement;
+  const OPTS = [
+    ["read", "読みやすい文字", "UD フォント・行間と字間を広く"],
+    ["cvd", "色の見分けを助ける", "色に形・模様・記号を足す"],
+    ["calm", "動きを減らす", "揺れ・点滅・すべる動きを止める"],
+    ["say", "読み上げのボタンを出す", "問題や知らせを声で読む（端末の中の声だけ）"],
+    ["ruby", "ふりがなを出す", "むずかしい漢字に読みを付ける"],
+  ];
+  const media = (q) => { try { return matchMedia(q).matches; } catch { return false; } };
+  // 保存した値がオブジェクトでなければ（別のページが書いた・手で直した）無かったことにする（2026-11-05 CodeRabbit：true が入ると設定が開けなくなる）
+  const load = () => { try { const v = JSON.parse(localStorage.getItem(KEY) || "{}"); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch { return {}; } };
+  let S = load();
+  // 決めていないものは端末の設定に合わせる（視差効果を減らす → 動きを減らす）
+  const on = (k) => (k in S ? !!S[k] : k === "calm" ? media("(prefers-reduced-motion: reduce)") : false);
+  let fontLoaded = false;
+  const loadFont = () => {
+    if (fontLoaded) return; fontLoaded = true;
+    // Google Fonts を許しているページだけ取りに行く（許していなければ端末にある UD フォントを使う）
+    const csp = (document.querySelector('meta[http-equiv="Content-Security-Policy"]') || {}).content || "";
+    if (csp && !/fonts\.googleapis\.com/.test(csp)) return;
+    const l = document.createElement("link");
+    l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap";
+    document.head.appendChild(l);
+  };
+  const apply = () => {
+    for (const [k] of OPTS) root.classList.toggle("a11y-" + k, on(k));
+    if (on("read")) loadFont();
+    if (sayBtn) sayBtn.hidden = !on("say");
+    if (!on("say")) stop();
+  };
+  const set = (k, v) => {
+    S = { ...S, ...load() }; // 別のタブで変えた設定を消さないよう、書く前に読み直す
+    S[k] = !!v;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* 保存できなくても今の画面には効かせる */ }
+    apply();
+    document.dispatchEvent(new CustomEvent("a11ychange", { detail: { key: k, on: !!v } }));
+  };
+
+  // 読み上げ：端末の中の日本語の声だけを使う（外へ文字を送る声は使わない）
+  const voice = () => { try { return speechSynthesis.getVoices().find((v) => /^ja/i.test(v.lang) && v.localService) || null; } catch { return null; } };
+  const stop = () => { try { speechSynthesis.cancel(); } catch { /* 無い端末 */ } };
+  const visible = (el) => { const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && !el.closest("[hidden],[aria-hidden=true],[inert]"); };
+  const textOf = (sel) => [...document.querySelectorAll(sel)].filter(visible).map((el) => (el.getAttribute("aria-label") || el.innerText || "").trim()).filter(Boolean).join("。");
+  // data-a11y-say が無い画面では、見出しと知らせの場所を読む（2026-11-05 何も読まれず設定が開くだけだった）
+  const sayText = () => textOf("[data-a11y-say]") || textOf("h1,h2,[role=status],[aria-live]");
+  const say = (text) => {
+    const v = voice();
+    if (!v || !text) return false;
+    stop();
+    const u = new SpeechSynthesisUtterance(text.slice(0, 600));
+    u.voice = v; u.lang = v.lang; u.rate = 0.95;
+    speechSynthesis.speak(u);
+    return true;
+  };
+
+  let dlg = null, sayBtn = null, lastFocus = null;
+  const build = () => {
+    dlg = document.createElement("dialog");
+    dlg.className = "a11y-dlg";
+    dlg.setAttribute("aria-labelledby", "a11y-h");
+    const hasRuby = !!document.querySelector("ruby.a11y-rb");
+    dlg.innerHTML = `<h2 id="a11y-h">見やすさ・読みやすさ</h2><p>ほかのゲームにも同じ設定が使われます。文字は2本の指で広げると大きくなります。</p>` +
+      OPTS.filter(([k]) => k !== "ruby" || hasRuby).map(([k, n, d]) => `<label><input type="checkbox" data-k="${k}"><span>${n}<small>${d}</small></span></label>`).join("") +
+      `<p class="a11y-note" id="a11y-novoice" hidden>この端末には、外へ送らずに読める日本語の声がありません。</p><div class="a11y-row"><button type="button" class="a11y-ok" data-a11y-close>閉じる</button></div>`;
+    document.body.appendChild(dlg);
+    dlg.addEventListener("change", (e) => {
+      const k = e.target.dataset && e.target.dataset.k;
+      if (!k) return;
+      set(k, e.target.checked);
+      if (k === "say") dlg.querySelector("#a11y-novoice").hidden = !(e.target.checked && !voice());
+    });
+    dlg.querySelector("[data-a11y-close]").addEventListener("click", () => dlg.close());
+    dlg.addEventListener("close", () => { if (lastFocus && lastFocus.focus) lastFocus.focus(); });
+    sayBtn = document.createElement("button");
+    sayBtn.type = "button"; sayBtn.className = "a11y-saybtn"; sayBtn.textContent = "🔊 読む"; sayBtn.setAttribute("aria-label", "画面の問題を読み上げる");
+    sayBtn.addEventListener("click", () => {
+      try { if (speechSynthesis.speaking) return stop(); } catch { /* 無い端末 */ }
+      if (!say(sayText())) open();
+    });
+    document.body.appendChild(sayBtn);
+    if (!document.querySelector("[data-a11y-open]")) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "a11y-btn a11y-float"; b.textContent = "Aa"; b.setAttribute("data-a11y-open", ""); b.setAttribute("aria-label", "見やすさの設定");
+      document.body.appendChild(b);
+    }
+    document.addEventListener("click", (e) => { const t = e.target.closest && e.target.closest("[data-a11y-open]"); if (t) { e.preventDefault(); open(); } });
+    apply();
+  };
+  const open = () => {
+    if (!dlg) build();
+    lastFocus = document.activeElement;
+    for (const c of dlg.querySelectorAll("input[data-k]")) c.checked = on(c.dataset.k);
+    dlg.querySelector("#a11y-novoice").hidden = !(on("say") && !voice());
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  };
+  // 声の一覧はあとから届くことがある。届いたら「声がありません」を出し直す
+  try { speechSynthesis.addEventListener("voiceschanged", () => { if (dlg) dlg.querySelector("#a11y-novoice").hidden = !(on("say") && !voice()); }); } catch { /* 無い端末 */ }
+  apply();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", build); else build();
+  window.A11y = { on, set, open, say, stop };
+})();
+</script>
+<!-- a11y:end -->
+<script src="transfer.js" data-game="teate-junban" data-keys="teate-v1,teate-fs"></script>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<dialog id="howto" aria-labelledby="howto-t">
+  <h2 id="howto-t">遊び方</h2>
+  <ol>
+    <li>けがや急病の場面が出ます。</li>
+    <li>手当てのカードを、する順に押して並べます。</li>
+    <li>「やってはいけない手当て」のカードもまざっています。押さないように。</li>
+    <li>並べ終わると、なぜその順なのかが出ます。</li>
+  </ol>
+  <p>まちがえても続けられます。時間制限はありません。今日の5問はだれでも同じで、1日1回です。</p>
+  <p>中身は消防庁・消防局・日本赤十字社の資料にもとづいています。本当の場面では、迷ったら119番です。</p>
+  <p><a id="fb2" target="_blank" rel="noopener">感想を送る</a></p>
+  <button class="main" id="howto-ok" style="width:100%">わかった</button>
+</dialog>
+<script src="data.js"></script>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id), app = $("app");
+const SITE = "https://satou-aaaaa.github.io/teate-junban/";
+const FEEDBACK = "https://github.com/satou-aaaaa/teate-junban/issues/new?template=feedback.yml";
+const KEY = "teate-v1", FSKEY = "teate-fs", EPOCH = "2026-11-07";
+const G = window.TEATE, LV = G.LV;
+
+// ---- 文字の大きさ（この端末だけ。記録とは別に置く）----
+function fsGet() { try { const v = +localStorage.getItem(FSKEY); return v >= 1 && v <= 3 ? v : 2; } catch (e) { return 2; } }
+function fsSet(v) { try { localStorage.setItem(FSKEY, String(v)); } catch (e) {} document.documentElement.classList.remove("fs1", "fs2", "fs3"); document.documentElement.classList.add("fs" + v); }
+document.documentElement.classList.remove("fs1", "fs2", "fs3"); document.documentElement.classList.add("fs" + fsGet());
+
+// ---- 日付（日本時間。だれでも同じ5問）----
+const jstNow = () => new Date(Date.now() + 9 * 3600e3);
+const todayKey = () => jstNow().toISOString().slice(0, 10);
+const dayNo = (k) => Math.round((Date.parse(k) - Date.parse(EPOCH)) / 864e5) + 1;
+const prevDay = (k) => new Date(Date.parse(k) - 864e5).toISOString().slice(0, 10);
+const md = (k) => `${+k.slice(5, 7)}/${+k.slice(8, 10)}`;
+const listOf = (mode, date) => (mode === "h" ? G.hardTags(date) : G.dailyTags(date));
+
+// ---- とことん：全部の場面を、やさしい→ふつう→むずかしいの順に、毎回ちがう並びで（乱数は練習・とことんだけ）----
+// 1つの並びの中で同じ場面は出ない。使い切ったら新しい並びを足して続ける（つなぎ目で同じ場面を続けない）
+const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const rshuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+function endlessList(avoid) {
+  const s = rid(); let ids = [];
+  for (const lv of [0, 1, 2]) ids.push(...rshuffle(G.idsOf(lv)));
+  if (avoid && ids[0] === avoid) { const j = ids.findIndex((x, i) => i > 0 && G.BY[x].lv === 0); [ids[0], ids[j]] = [ids[j], ids[0]]; }
+  return ids.map((id, i) => `${id}|e${s}:${i}`);
+}
+function randomTags(lv, n) { const s = rid(), pool = typeof lv === "string" ? [lv] : lv === "all" ? G.SCENES.map((x) => x.id) : G.idsOf(lv); const ids = []; let bag = []; for (let i = 0; i < n; i++) { if (!bag.length) bag = rshuffle(pool); if (bag.length > 1 && bag[0] === ids[ids.length - 1]) bag.push(bag.shift()); ids.push(bag.shift()); } return ids.map((id, i) => `${id}|p${s}:${i}`); }
+const starsOf = (m) => (m === 0 ? 3 : m === 1 ? 2 : 1); // m = まちがい＋ヒントの数
+const starStr = (s) => `<span class="stars" aria-label="星${s}つ">${"★".repeat(s)}<span class="off">${"☆".repeat(3 - s)}</span></span>`;
+
+// ---- 記録（この端末の localStorage だけ）----
+// days/hdays/adays：日付 → { m:[1問ごとのまちがい＋ヒント], k:[場面] }。adays はあとから遊んだ日（連続の日・今日の記録・Ko-fi には数えない）
+// dex：場面 → 並べた数（手当て帳）。miss：まちがえた場面 → 日付（おさらい。12まで）。runs：モードごとの途中経過
+const fresh = () => ({ v: 1, days: {}, hdays: {}, adays: {}, dex: {}, miss: {}, runs: {}, tut: false, kofi: {}, ach: {}, ebest: 0 });
+const BOXES = ["days", "hdays", "adays", "dex", "miss", "runs", "kofi", "ach"];
+let MODE = "d";
+let mem = null; // 保存できない環境では、開いているあいだだけここに置く
+const doneOf = (r) => !!r && r.res.length >= r.list.length && r.mode !== "e", recOf = (r) => ({ m: r.res.map((x) => x.m), k: r.list.map((t) => t.split("|")[0]) });
+const runKey = (mode, date) => (mode === "a" ? "a:" + date : mode);
+const bookOf = (s, m) => (m === "d" ? s.days : m === "h" ? s.hdays : m === "a" ? s.adays : null);
+// 終わった回を日ごとの記録に入れる（結果を見る前に閉じても、別のタブが次の日を保存しても、終えた日を失わない）
+function bank(s, r) { const b = doneOf(r) ? bookOf(s, r.mode) : null; if (!b || b[r.date] || (r.mode === "a" && s.days[r.date])) return false; b[r.date] = recOf(r); return true; }
+const prog = (r) => (r.res ? r.res.length : 0) * 1000 + (r.cur ? (r.cur.p || 0) * 20 + (r.cur.m || 0) + (r.cur.hints || 0) : 0);
+// 保存に失敗したあとはメモリと保存の両方を読む。合わせる前に両方を fresh() で補う。数は高いほう、途中経過は同じ回なら進んだほう
+function load() {
+  let a = null, b = null;
+  try { b = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  try { a = mem !== null ? JSON.parse(mem) : null; } catch (e) {}
+  if (!a || typeof a !== "object" || a.v !== 1) a = null; if (!b || typeof b !== "object" || b.v !== 1) b = null;
+  if (!a || !b) return tidy(Object.assign(fresh(), a || b || {}));
+  a = Object.assign(fresh(), a); b = Object.assign(fresh(), b);
+  const [n, o] = (a.t || 0) >= (b.t || 0) ? [a, b] : [b, a], s = Object.assign(fresh(), n);
+  for (const k in o) {
+    if (k === "runs" || k === "t") continue;
+    const x = o[k], y = n[k];
+    if (x && y && typeof x === "object" && typeof y === "object") { s[k] = Object.assign({}, x, y); for (const q in x) if (typeof x[q] === "number" && typeof y[q] === "number") s[k][q] = Math.max(x[q], y[q]); }
+    else if (typeof x === "number" && typeof y === "number") s[k] = Math.max(x, y);
+    else if (x === true) s[k] = true;
+  }
+  const ra = a.runs || {}, rb = b.runs || {};
+  s.runs = Object.assign({}, n.runs);
+  for (const m of new Set([...Object.keys(ra), ...Object.keys(rb)])) {
+    const x = ra[m], y = rb[m];
+    if (x === undefined || y === undefined) { if (x || y) s.runs[m] = x || y; continue; }
+    if (!x || !y) { const r = x || y; if (!r || bank(s, r) || doneOf(r)) continue; const bd = bookOf(s, r.mode); if (bd && !bd[r.date]) s.runs[m] = r; continue; }
+    if (x.id !== y.id && x.date !== y.date) { const [w, l] = x.date > y.date ? [x, y] : [y, x]; bank(s, l); s.runs[m] = w; }
+    else if (x.id === y.id) { const px = prog(x), py = prog(y); s.runs[m] = px > py ? x : py > px ? y : n.runs[m]; }
+  }
+  return tidy(s);
+}
+// 引き継ぎコードなどから入った値を正しい形に直す（数の所に文字が入っていても画面に出さない）
+const num = (v) => (Number.isFinite(+v) && +v >= 0 ? Math.floor(+v) : 0);
+const okDate = (v) => { if (typeof v !== "string" || !/^\d{4}-\d\d-\d\d$/.test(v)) return false; const t = Date.parse(v + "T00:00:00Z"); return Number.isFinite(t) && new Date(t).toISOString().slice(0, 10) === v; };
+const okTag = (t) => typeof t === "string" && Object.prototype.hasOwnProperty.call(G.BY, t.split("|")[0]);
+function tidy(s) {
+  s.ebest = num(s.ebest); s.tut = s.tut === true;
+  for (const q of BOXES) if (!s[q] || typeof s[q] !== "object" || Array.isArray(s[q])) s[q] = {};
+  for (const k in s.dex) if (!G.BY[k]) delete s.dex[k]; else s.dex[k] = num(s.dex[k]);
+  for (const k in s.miss) if (!G.BY[k] || !okDate(s.miss[k])) delete s.miss[k];
+  const okRec = (x) => !!x && typeof x === "object" && Array.isArray(x.m) && x.m.every((v) => Number.isInteger(v) && v >= 0);
+  for (const b of [s.days, s.hdays, s.adays]) for (const d in b) if (!okDate(d) || !okRec(b[d])) delete b[d];
+  for (const m in s.runs) {
+    const r = s.runs[m]; if (r === null) continue;
+    if (typeof r !== "object" || !okDate(r.date) || !Array.isArray(r.list) || !r.list.every(okTag) || !Array.isArray(r.res) || !r.res.every((x) => x && typeof x === "object" && Number.isInteger(x.m) && x.m >= 0)) { delete s.runs[m]; continue; }
+    if (r.cur != null && (typeof r.cur !== "object" || !Array.isArray(r.cur.ngs))) r.cur = null;
+    else if (r.cur) { r.cur.p = num(r.cur.p); r.cur.m = num(r.cur.m); r.cur.hints = num(r.cur.hints); r.cur.ngs = r.cur.ngs.filter((v) => Number.isInteger(v) && v >= 0); }
+    r.clean = num(r.clean); if ("b0" in r) r.b0 = num(r.b0);
+  }
+  return s;
+}
+// 保存の前に読み直す（別のタブで進めた記録を消さない）
+function save(fn) { const s = load(); fn(s); s.t = Math.max(Date.now(), (s.t || 0) + 1); const j = JSON.stringify(s); try { localStorage.setItem(KEY, j); mem = null; } catch (e) { mem = j; } return s; }
+function streak(days) { let k = todayKey(), n = 0; if (!days[k]) k = prevDay(k); while (days[k]) { n++; k = prevDay(k); } return n; }
+const playedDays = (s) => new Set([...Object.keys(s.days), ...Object.keys(s.adays)]).size;
+const solvedAll = (s) => Object.values(s.dex).reduce((a, b) => a + (+b || 0), 0);
+const LATE = 7;
+function lateDays(s, k = todayKey()) { const out = []; let d = k; for (let i = 0; i < LATE; i++) { d = prevDay(d); if (d < EPOCH) break; if (!s.days[d] && !s.adays[d]) out.push(d); } return out; }
+
+// ---- 実績：いまの記録から毎回数える（新しく残すのは結果で知らせ終えた印 ach だけ）。[id, 名前, 条件, 種類, 数え方, 目標] ----
+const CATS = [...new Set(G.SCENES.map((x) => x.cat))];
+function tally(s) {
+  const dk = Object.values(s.days);
+  const seen = Object.keys(s.dex).filter((k) => G.BY[k] && s.dex[k] > 0);
+  return { days: Object.keys(s.days).length, played: playedDays(s), clean: dk.filter((r) => r.m.length && r.m.every((m) => m === 0)).length, hard: Object.keys(s.hdays).length,
+    late: Object.keys(s.adays).length, scenes: seen.length, cats: new Set(seen.map((k) => G.BY[k].cat)).size, solved: solvedAll(s), ebest: s.ebest || 0,
+    life: seen.filter((k) => G.BY[k].cat === "life").length };
+}
+const ACH = [
+  ["clean1", "落ちついて手当て", "今日の5問を、まちがいもヒントもなしで並べる", 0, "clean", 1],
+  ["clean5", "たのもしい手当て", "まちがいなしの日を5日", 0, "clean", 5],
+  ["hard1", "上級の3問", "上級の3問を並べる", 0, "hard", 1],
+  ["hard10", "上級の常連", "上級を10日並べる", 0, "hard", 10],
+  ["e10", "とことん10場面", "とことんで、まちがいなしの場面を10", 0, "ebest", 10],
+  ["e25", "とことん25場面", "とことんで、まちがいなしの場面を25", 0, "ebest", 25],
+  ["s10", "手当て帳10場面", "手当て帳に10場面", 1, "scenes", 10],
+  ["sall", "手当て帳ぜんぶ", `手当て帳の${G.SCENES.length}場面を全部集める`, 1, "scenes", G.SCENES.length],
+  ["call", "どの分野も", `${CATS.length}つの分野を全部ひらく`, 1, "cats", CATS.length],
+  ["life", "命を救う手順", "「命を救う」の場面を全部並べる", 1, "life", G.SCENES.filter((x) => x.cat === "life").length],
+  ["first", "はじめの1日", "今日の5問を並べる", 2, "days", 1],
+  ["p7", "7日", "遊んだ日が合わせて7日", 2, "played", 7],
+  ["p30", "30日", "遊んだ日が合わせて30日", 2, "played", 30],
+  ["late1", "あとから1日", "取りこぼした日をあとから遊ぶ", 2, "late", 1],
+];
+const AGRP = ["腕前", "集める", "続ける"];
+const AUNIT = { clean: "日", hard: "日", days: "日", played: "日", late: "日", scenes: "場面", cats: "分野", solved: "問", ebest: "場面", life: "場面" };
+const achGot = (s) => { const t = tally(s); return ACH.filter((a) => t[a[4]] >= a[5]).map((a) => a[0]); };
+function nextAch(s) {
+  const t = tally(s); let best = null;
+  for (const a of ACH) { const n = t[a[4]]; if (n <= 0 || n >= a[5]) continue; const r = n / a[5], left = a[5] - n; if (!best || r > best.r || (r === best.r && left < best.left)) best = { id: a[0], name: a[1], left, unit: AUNIT[a[4]] || "", r }; }
+  return best;
+}
+
+// ---- 画面 ----
+function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role", "status"); d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2000); }
+const buzz = (n = 12) => { try { if (!(window.A11y && A11y.on("calm"))) navigator.vibrate && navigator.vibrate(n); } catch (e) {} };
+const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const toTop = () => window.scrollTo(0, 0);
+const NUM = "①②③④⑤⑥⑦⑧";
+const srcHtml = (P) => `<p class="src">出典：${P.src.map((k) => `<a href="${G.SRC[k][1]}" target="_blank" rel="noopener">${esc(G.SRC[k][0])}</a>`).join("・")}</p>`;
+const footer = () => `<footer><a href="#" id="f-how">遊び方</a><a href="#" id="f-about">このゲームについて</a><a href="#" data-a11y-open>見やすさ</a><a href="#" data-hk>引き継ぎ</a><a href="${FEEDBACK}" target="_blank" rel="noopener">感想を送る</a><a href="https://ko-fi.com/satouaaaaa" target="_blank" rel="noopener">Ko-fi で応援</a></footer>`;
+function bindFooter() { const h = $("f-how"); if (h) h.onclick = (e) => { e.preventDefault(); openHow(); }; const a = $("f-about"); if (a) a.onclick = (e) => { e.preventDefault(); about(); }; }
+function openHow() { $("fb2").href = FEEDBACK; const d = $("howto"); if (d.showModal) d.showModal(); else d.setAttribute("open", ""); }
+$("howto-ok").onclick = () => { const d = $("howto"); d.close ? d.close() : d.removeAttribute("open"); save((s) => { s.tut = true; }); };
+
+function home() {
+  const s = load(), k = todayKey(), done = s.days[k], hdone = s.hdays[k];
+  for (const m of Object.keys(s.runs)) { const r = s.runs[m]; if (m !== "p" && m !== "e" && r && doneOf(r)) { MODE = m; return finish(); } }
+  const late = lateDays(s, k), ag = achGot(s).length, fs = fsGet(), nk = Object.keys(s.dex).length, nm = Object.keys(s.miss).length;
+  const rd = s.runs.d && s.runs.d.date === k ? s.runs.d : null, rh = s.runs.h && s.runs.h.date === k ? s.runs.h : null, re = s.runs.e || null;
+  const st = streak(s.days);
+  app.innerHTML = `
+    <div class="kit" aria-hidden="true">🩹🧊🚑</div>
+    <h1 class="title">手当て<span>じゅんばん</span></h1>
+    <p class="lead" data-a11y-say>けがや急病の手当てを、する順に並べる。<br>だれでも同じ1日5問。</p>
+    <div class="fsrow" role="group" aria-label="文字の大きさ">文字<button data-fs="1" aria-pressed="${fs === 1}" aria-label="文字 ふつう">あ</button><button data-fs="2" aria-pressed="${fs === 2}" aria-label="文字 大きい" style="font-size:1.15em">あ</button><button data-fs="3" aria-pressed="${fs === 3}" aria-label="文字 とても大きい" style="font-size:1.3em">あ</button></div>
+    ${done ? `<div class="share">今日の結果　${done.m.map(sq).join("")}</div>` : ""}
+    <button class="main" id="go-d">${done ? "今日の結果を見る" : rd ? `続きから（${rd.res.length + 1}問目）` : `今日の5問 <small>第${dayNo(k)}回</small>`}</button>
+    <button class="main alt" id="go-h">${hdone ? "上級の結果を見る" : rh ? "上級の続きから" : "上級：むずかしい3問（ヒントなし）"}</button>
+    <button class="main alt" id="go-e">${re ? `とことんの続きから（${re.res.length + 1}場面目）` : "とことん：全部の場面を次々に"}${s.ebest ? ` <small>自己ベスト ${s.ebest}場面</small>` : ""}</button>
+    <div class="row"><button class="sub" id="go-p">練習（何度でも）</button><button class="sub" id="go-dex">手当て帳 ${nk}/${G.SCENES.length}</button></div>
+    ${nm ? `<button class="sub" id="go-miss">まちがえた場面のおさらい（${nm}）</button>` : ""}
+    <div class="row"><button class="sub" id="go-cal" aria-label="カレンダー${late.length ? `（あとから遊べる日 ${late.length}）` : ""}">カレンダー${late.length ? ` <span class="badge">▶${late.length}</span>` : ""}</button><button class="sub" id="go-ach">実績 ${ag}/${ACH.length}</button></div>
+    <div class="stats"><div><b>${playedDays(s)}</b><small>遊んだ日</small></div><div><b>${solvedAll(s)}</b><small>並べた場面</small></div><div><b>${st >= 1 ? st : "—"}</b><small>${st >= 1 ? "続けて" : "続けた日"}</small></div></div>
+    <p class="warn"><b>本当の場面では：</b>命にかかわるとき・迷ったときは、すぐ119番。このゲームは学ぶためのもので、講習の代わりにはなりません。</p>
+    ${footer()}`;
+  document.querySelectorAll(".fsrow button").forEach((b) => (b.onclick = () => { fsSet(+b.dataset.fs); home(); }));
+  $("go-d").onclick = () => (k !== todayKey() ? home() : done ? result("d", k) : startRun("d"));
+  $("go-h").onclick = () => (k !== todayKey() ? home() : hdone ? result("h", k) : startRun("h"));
+  $("go-e").onclick = () => startRun("e");
+  $("go-p").onclick = practiceMenu;
+  $("go-dex").onclick = book;
+  if ($("go-miss")) $("go-miss").onclick = () => startRun("p", "miss");
+  $("go-cal").onclick = () => cal();
+  $("go-ach").onclick = achView;
+  bindFooter();
+  if (!s.tut) openHow();
+}
+function practiceMenu() {
+  app.innerHTML = `<header><button class="icon" id="back" aria-label="もどる">←</button><h1>練習<small>今日の記録には入りません（手当て帳には載ります）</small></h1></header>
+    <p class="note">難しさか分野を選ぶと5問出ます。何度でも遊べます。</p>
+    <div class="lv">${LV.map((l, t) => `<button class="sub" data-t="${t}" style="min-height:60px">${l}</button>`).join("")}<button class="sub" data-t="all" style="min-height:60px">ぜんぶまぜる</button></div>
+    <p class="agrp">分野</p>
+    <div class="lv">${CATS.map((c) => `<button class="sub" data-c="${c}">${esc(G.CAT[c])}（${G.SCENES.filter((x) => x.cat === c).length}場面）</button>`).join("")}</div>
+    ${footer()}`;
+  $("back").onclick = home;
+  document.querySelectorAll(".lv button[data-t]").forEach((b) => (b.onclick = () => startRun("p", b.dataset.t === "all" ? "all" : +b.dataset.t)));
+  document.querySelectorAll(".lv button[data-c]").forEach((b) => (b.onclick = () => startRun("p", "cat:" + b.dataset.c)));
+  bindFooter(); toTop();
+}
+function practiceList(opt, s) {
+  if (opt === "miss") { const ids = Object.keys(s.miss).sort((a, b) => (s.miss[a] < s.miss[b] ? -1 : 1)).slice(0, 5); const r = rid(); return ids.map((id, i) => `${id}|p${r}:${i}`); }
+  if (typeof opt === "string" && opt.startsWith("cat:")) { const c = opt.slice(4), ids = rshuffle(G.SCENES.filter((x) => x.cat === c).map((x) => x.id)).slice(0, 5), r = rid(); return ids.map((id, i) => `${id}|p${r}:${i}`); }
+  if (typeof opt === "string" && opt.startsWith("one:")) { const r = rid(); return [`${opt.slice(4)}|p${r}:0`]; }
+  return randomTags(opt, 5);
+}
+function startRun(mode, opt) {
+  const k = todayKey(); let ng = false;
+  save((s) => {
+    if (mode === "a") {
+      const ra = s.runs[runKey("a", opt)];
+      if (!lateDays(s, k).includes(opt)) { ng = true; return; }
+      if (ra && ra.date === opt && !doneOf(ra)) return;
+      s.runs[runKey("a", opt)] = { mode, date: opt, list: G.dailyTags(opt), res: [], cur: null, id: "a" + opt, a0: achGot(s) };
+      return;
+    }
+    if (mode === "e") { if (s.runs.e) return; s.runs.e = { mode, date: k, list: endlessList(), res: [], cur: null, clean: 0, b0: s.ebest || 0, id: rid(), a0: achGot(s) }; return; }
+    if (mode !== "p" && s.runs[mode] && s.runs[mode].date === k) return;
+    if ((mode === "d" && s.days[k]) || (mode === "h" && s.hdays[k])) return;
+    const list = mode === "d" || mode === "h" ? listOf(mode, k) : practiceList(opt, s);
+    if (!list.length) { ng = true; return; }
+    s.runs[mode] = { mode, date: k, list, res: [], cur: null, id: rid(), a0: achGot(s) };
+  });
+  if (ng) return mode === "a" ? cal() : home();
+  MODE = runKey(mode, opt);
+  play();
+}
+
+// 今の1問：{ i, date, id, tag, P, p:並べた数, m:まちがい, hints, ngs:[押した「しない」札], done }
+let cur = null;
+const same = (r) => r && cur && r.date === cur.date && r.id === cur.id && r.res.length === cur.i && r.list[cur.i] === cur.tag;
+function keep() { save((s) => { const r = s.runs[MODE]; if (!same(r)) return; const was = r.cur && r.cur.i === cur.i && r.cur.tag === cur.tag ? r.cur : { p: 0, m: 0, hints: 0, ngs: [] }; cur.p = Math.max(cur.p, was.p || 0); cur.m = Math.max(cur.m, was.m || 0); cur.hints = Math.max(cur.hints, was.hints || 0); for (const w of was.ngs || []) if (!cur.ngs.includes(w)) cur.ngs.push(w); r.cur = { i: cur.i, tag: cur.tag, p: cur.p, m: cur.m, hints: cur.hints, ngs: cur.ngs.slice() }; }); }
+const missOf = () => cur.m + cur.hints;
+function play() {
+  const s = load(), run = s.runs[MODE];
+  if (!run) return home();
+  if (run.mode === "e" && run.res.length >= run.list.length - 1) { save((s2) => { const r = s2.runs.e; if (r && r.id === run.id) { const last = r.list[r.list.length - 1].split("|")[0]; r.list.push(...endlessList(last)); } }); return play(); }
+  const i = run.res.length;
+  if (i >= run.list.length) return finish();
+  if (run.mode === "a" && s.days[run.date]) { save((s2) => { s2.runs[MODE] = null; }); toast("この日は別の画面で遊び終えています"); return home(); }
+  const tag = run.list[i], hard = run.mode === "h", P = G.make(tag, hard);
+  const saved = run.cur && run.cur.i === i && run.cur.tag === tag ? run.cur : { p: 0, m: 0, hints: 0, ngs: [] };
+  cur = { i, date: run.date, id: run.id, tag, P, p: Math.min(saved.p || 0, P.n), m: saved.m || 0, hints: saved.hints || 0, ngs: (saved.ngs || []).filter((j) => P.cards[j] && P.cards[j].k === "n"), done: false };
+  const label = run.mode === "d" ? LV[P.lv] : run.mode === "a" ? `あとから・${LV[P.lv]}` : hard ? "上級" : run.mode === "e" ? `とことん・${LV[P.lv]}` : `練習・${LV[P.lv]}`;
+  app.innerHTML = `
+    <header><button class="icon" id="back" aria-label="もどる">←</button>
+      ${run.mode === "e" ? `<span style="font-size:.85rem;color:var(--ink2)">${label} ${i + 1}場面目・まちがいなし ${run.clean || 0}${s.ebest ? `（ベスト ${s.ebest}）` : ""}</span>`
+        : `<div class="dots" aria-label="${i + 1}問目／${run.list.length}問">${run.list.map((_, j) => `<i class="${j < i ? "done" : j === i ? "on" : ""}"></i>`).join("")}</div><span style="font-size:.8rem;color:var(--ink2)">${label} ${i + 1}/${run.list.length}</span>`}
+    </header>
+    <div class="scene"><span class="em" aria-hidden="true">${P.ic}</span><b>${esc(P.name)}</b><p data-a11y-say>${esc(P.scene)}</p></div>
+    <p class="q" id="qtext">する順に押して並べよう（${P.n}つ）。${P.cards.length > P.n ? "やってはいけない手当ても、まざっています。" : ""}</p>
+    <ol class="slots" id="slots" aria-label="並べた手当て">${P.steps.map((_, j) => `<li data-o="${j}"><span class="no" aria-hidden="true">${NUM[j]}</span><span class="tx">？</span></li>`).join("")}</ol>
+    <div class="cards" id="cards">${P.cards.map((c, j) => `<button class="cd" data-j="${j}"><span class="mk" aria-hidden="true"></span><span>${esc(c.t)}</span></button>`).join("")}</div>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    <div id="hintbox"></div>
+    ${hard ? "" : `<button class="sub" id="hint">ヒント</button>`}
+    ${run.mode === "e" ? `<button class="sub" id="quit">ここで降りる（${i}場面で終える）</button>` : ""}
+    <div id="after"></div>`;
+  $("back").onclick = home;
+  document.querySelectorAll(".cd").forEach((b) => (b.onclick = () => choose(+b.dataset.j)));
+  if ($("hint")) $("hint").onclick = hint;
+  if ($("quit")) $("quit").onclick = () => { if (cur && cur.done) return; finish(); };
+  paint();
+  if (cur.p >= P.n) solved();
+  toTop();
+}
+const nextCard = () => cur.P.cards.findIndex((c) => c.k === "s" && c.o === cur.p);
+function paint() {
+  const P = cur.P;
+  document.querySelectorAll(".slots li").forEach((li) => { const o = +li.dataset.o, got = o < cur.p; li.classList.toggle("got", got); li.querySelector(".tx").innerHTML = got ? `${esc(P.steps[o][0])}<small>${esc(P.steps[o][1])}</small>` : "？"; li.setAttribute("aria-label", `${o + 1}番目：${got ? P.steps[o][0] : "まだ"}`); });
+  const nx = nextCard();
+  document.querySelectorAll(".cd").forEach((b) => { const j = +b.dataset.j, c = P.cards[j], ng = cur.ngs.includes(j), used = c.k === "s" && c.o < cur.p, hl = cur.hints >= 2 && j === nx && !cur.done; b.classList.toggle("ng", ng); b.classList.toggle("used", used); b.classList.toggle("hl", hl); b.disabled = ng || used || cur.done; b.setAttribute("aria-label", c.t + (ng ? "（やってはいけない）" : hl ? "（ヒント：次はこれ）" : "")); });
+  const h = $("hint"); if (h) h.disabled = cur.done || cur.hints >= 2;
+  $("hintbox").innerHTML = cur.hints && !cur.done ? `<div class="hint" role="status">💡 ${esc(P.look)}${cur.hints >= 2 ? "<br>👉 次にする手当てのカードを光らせました。" : ""}</div>` : "";
+}
+function hint() { if (cur.done || cur.hints >= 2) return; cur.hints++; keep(); paint(); }
+function choose(j) {
+  if (cur.done) return;
+  if (!same(load().runs[MODE])) { toast("別の画面で先に進んでいます"); return play(); }
+  const c = cur.P.cards[j], msg = $("msg"), b = document.querySelector(`.cd[data-j="${j}"]`);
+  if (c.k === "n") {
+    if (cur.ngs.includes(j)) return;
+    buzz(40); cur.ngs.push(j); cur.m++; keep(); paint();
+    msg.className = "msg bad"; msg.textContent = `✕ これはしません。${c.w}`;
+    return;
+  }
+  if (c.o !== cur.p) {
+    buzz(40); cur.m++; keep(); paint();
+    if (b) { b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); }
+    msg.className = "msg bad"; msg.textContent = c.o < cur.p ? "✕ それはもう並べました。" : "✕ まだです。その前にすることがあります。";
+    return;
+  }
+  cur.p++; buzz(10); keep(); paint();
+  msg.className = "msg good"; msg.textContent = `✓ ${NUM[c.o]} ${c.t}`;
+  if (cur.p >= cur.P.n) solved();
+}
+function solved() {
+  cur.done = true; buzz([10, 40, 10]);
+  const m = missOf(), st = starsOf(m), P = cur.P;
+  const s = save((s) => { const r = s.runs[MODE]; if (!same(r)) return; r.res.push({ m }); r.cur = null; if (r.mode === "e" && m === 0) r.clean = (r.clean || 0) + 1; s.dex[P.id] = (s.dex[P.id] || 0) + 1; if (m > 0) s.miss[P.id] = r.date; else delete s.miss[P.id]; if (r.mode === "e") s.ebest = Math.max(s.ebest || 0, r.clean || 0); });
+  const r = s.runs[MODE], fin = r && r.mode !== "e" && r.res.length >= r.list.length;
+  paint();
+  if ($("hint")) $("hint").disabled = true;
+  $("hintbox").innerHTML = ""; $("msg").className = "msg"; $("msg").textContent = "";
+  $("cards").hidden = true; $("slots").hidden = true; $("qtext").hidden = true; if ($("hint")) $("hint").hidden = true;
+  const ngAll = P.ng;
+  $("after").innerHTML = `<div class="verdict" role="status">
+    <div class="hd">✓ 並べられた！ ${starStr(st)}</div>
+    <h3>手当ての順番</h3>
+    <ol>${P.steps.map(([t, w]) => `<li><b>${esc(t)}</b><small>${esc(w)}</small></li>`).join("")}</ol>
+    ${ngAll.length ? `<h3>やってはいけないこと</h3><ul class="nglist">${ngAll.map(([t, w]) => `<li><b>${esc(t)}</b><small>${esc(w)}</small></li>`).join("")}</ul>` : ""}
+    ${P.call ? `<p class="call">🚑 ${esc(P.call)}</p>` : ""}
+    ${srcHtml(P)}
+    <button class="main ok" id="next">${fin ? "結果を見る" : "次の場面へ"}</button></div>`;
+  $("next").onclick = play;
+  setTimeout(() => { if ($("next") && cur && cur.done && cur.tag === P.tag) $("next").scrollIntoView({ behavior: "smooth", block: "nearest" }); }, 60);
+}
+
+function finish() {
+  const s = load(), run = s.runs[MODE];
+  if (!run) return home();
+  if (run.mode === "e") return endFinish(run);
+  let first = false, newAch = [];
+  const rec = recOf(run);
+  save((s2) => {
+    first = bank(s2, run);
+    const c = s2.runs[MODE]; if (c && c.date === run.date && c.id === run.id) s2.runs[MODE] = null;
+    if (Array.isArray(run.a0)) newAch = achGot(s2).filter((id) => !run.a0.includes(id) && !s2.ach[id]);
+    for (const id of newAch) s2.ach[id] = 1;
+  });
+  if (run.mode === "p") return result("p", run.date, false, { list: run.list, ...rec }, newAch);
+  result(run.mode, run.date, first, null, newAch);
+}
+// とことんの終わり：まちがいなしの場面の数を自己ベストと比べる（他の人との順位は出さない）
+function endFinish(run) {
+  const n = run.clean || 0, all = run.res.length; let newAch = [];
+  save((s2) => { const c = s2.runs.e; if (c && c.id === run.id) s2.runs.e = null; s2.ebest = Math.max(s2.ebest || 0, n); if (Array.isArray(run.a0)) newAch = achGot(s2).filter((id) => !run.a0.includes(id) && !s2.ach[id]); for (const id of newAch) s2.ach[id] = 1; });
+  const s = load(), best = n > 0 && n > (run.b0 || 0); // 始めたときの自己ベスト b0 をこえたら
+  app.innerHTML = `
+    <header><button class="icon" id="back" aria-label="ホームへ">←</button><h1>手当てじゅんばん<small>とことん</small></h1></header>
+    <p class="big" id="eres">${all}場面 並べました</p>
+    <p class="note" id="ebest">まちがいなしの場面 ${n}${best ? "　🎉 自己ベスト！" : `（自己ベスト ${s.ebest}）`}</p>
+    ${newAch.length ? `<p class="achnew" id="achnew">${newAch.map((id) => `🏅 実績：${ACH.find((a) => a[0] === id)[1]}`).join("<br>")}</p>` : ""}
+    <button class="main" id="go-e">もう一度とことん</button>
+    <div class="row"><button class="sub" id="go-p">練習する</button><button class="sub" id="go-dex">手当て帳を見る</button></div>
+    <p class="note"><a href="${FEEDBACK}" target="_blank" rel="noopener">感想を送る</a></p>`;
+  $("back").onclick = home; $("go-e").onclick = () => startRun("e"); $("go-p").onclick = practiceMenu; $("go-dex").onclick = book;
+  toTop();
+}
+const sq = (m) => (m === 0 ? "🟢" : m === 1 ? "🔶" : "🔺");
+function shareText(mode, k, rec) { return `手当てじゅんばん${mode === "h" ? " 上級" : ""} 第${dayNo(k)}回 ${md(k)}\n${rec.m.map(sq).join("")}${rec.m.every((m) => m === 0) ? " まちがいなし" : ""}`; }
+function untilNext() { const n = jstNow(), ms = 864e5 - (n.getTime() % 864e5); return `${Math.floor(ms / 36e5)}時間${Math.floor((ms % 36e5) / 6e4)}分`; }
+function result(mode, k, first, prec, newAch = []) {
+  const s = load(), rec = mode === "p" ? prec : bookOf(s, mode)[k];
+  if (!rec) return home();
+  const list = mode === "p" ? prec.list : listOf(mode, k), total = rec.m.reduce((a, b) => a + b, 0), late = mode === "a", text = shareText(mode, k, rec);
+  const showKofi = first && mode !== "p" && !late && total === 0 && !s.kofi[k + mode];
+  if (showKofi) save((s2) => { s2.kofi[k + mode] = 1; });
+  app.innerHTML = `
+    <header><button class="icon" id="back" aria-label="ホームへ">←</button><h1>手当てじゅんばん<small>${mode === "d" ? `今日の5問 第${dayNo(k)}回` : late ? `第${dayNo(k)}回 あとから` : mode === "h" ? "上級" : "練習"}</small></h1></header>
+    <p class="big">${total === 0 ? "全部まちがいなし！" : `${list.length}場面 並べました`}</p>
+    ${newAch.length ? `<p class="achnew" id="achnew">${newAch.map((id) => `🏅 実績：${ACH.find((a) => a[0] === id)[1]}`).join("<br>")}</p>` : ""}
+    ${(() => { const nx = nextAch(s); return nx ? `<p class="achnext" id="achnext">🎯 あと${nx.left}${nx.unit}で「${esc(nx.name)}」</p>` : ""; })()}
+    <p class="note">覚えた手当て（押すと手順を見直せます）</p>
+    <div class="rlist">${list.map((tag, j) => { const P = G.BY[tag.split("|")[0]]; return `<div><span>${starStr(starsOf(rec.m[j]))}</span><span class="w"><b>${P.ic} ${esc(P.name)}</b>${NUM[0]} ${esc(P.steps[0][0])}</span></div>`; }).join("")}</div>
+    ${late ? `<p class="note">あとから遊んだ日は、カレンダーに ↺ で残ります（続けた日には数えません）。</p><button class="main alt" id="go-cal">カレンダーへ</button>` : ""}
+    ${mode !== "p" && !late ? `<div class="share">${esc(text)}</div>
+    <button class="main" id="share">結果をシェア</button>
+    <div class="shares"><a id="toX" target="_blank" rel="noopener">Xで投稿</a><a id="toLine" target="_blank" rel="noopener">LINEで送る</a><button id="copy">コピー</button></div>
+    <p class="note">🟢まちがいなし　🔶1回　🔺2回以上<br>次の5問まで あと <b>${untilNext()}</b></p>` : ""}
+    <button class="main alt" id="go-e">続けて遊ぶ：とことん${s.ebest ? `（ベスト ${s.ebest}場面）` : ""}</button>
+    ${mode === "d" && k === todayKey() && !s.hdays[k] ? `<button class="main alt" id="go-h">上級：むずかしい3問に挑む</button>` : ""}
+    <div class="row"><button class="sub" id="go-p">練習する</button><button class="sub" id="go-dex">手当て帳を見る</button></div>
+    ${showKofi ? `<p class="note kofi">役に立ったら、<a href="https://ko-fi.com/satouaaaaa" target="_blank" rel="noopener">Ko-fi でコーヒー1杯の応援</a>をもらえると、新しいゲームづくりの励みになります（任意・遊ぶのはずっと無料）。</p>` : ""}
+    <p class="note"><a href="${FEEDBACK}" target="_blank" rel="noopener">感想を送る</a></p>`;
+  $("back").onclick = home; $("go-p").onclick = practiceMenu; $("go-dex").onclick = book; $("go-e").onclick = () => startRun("e");
+  if ($("go-h")) $("go-h").onclick = () => (k === todayKey() ? startRun("h") : home());
+  if ($("go-cal")) $("go-cal").onclick = () => cal(k.slice(0, 7));
+  if (mode !== "p" && !late) {
+    const withUrl = text + "\n" + SITE;
+    $("toX").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(withUrl);
+    $("toLine").href = "https://line.me/R/share?text=" + encodeURIComponent(withUrl);
+    const copy = (t) => { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast("コピーしました"), () => toast("コピーできませんでした")); };
+    $("copy").onclick = () => copy(withUrl);
+    $("share").onclick = () => { if (navigator.share) navigator.share({ text: withUrl }).catch(() => {}); else copy(withUrl); };
+  }
+  toTop();
+}
+
+// 手当て帳：並べた場面が分野ごとに集まる。押すと手順を見直し、その場面だけで練習できる
+function book() {
+  const s = load(), n = G.SCENES.filter((x) => s.dex[x.id] > 0).length;
+  app.innerHTML = `
+    <header><button class="icon" id="back" aria-label="ホームへ">←</button><h1>手当て帳<small>${n}/${G.SCENES.length}場面</small></h1></header>
+    <p class="note">並べた場面が集まります。押すと、手順を見直せます。</p>
+    ${CATS.map((c) => `<p class="agrp">${esc(G.CAT[c])}</p><div class="book">${G.SCENES.filter((x) => x.cat === c).map((x) => s.dex[x.id] > 0 ? `<button data-k="${x.id}"><span class="mk" aria-hidden="true">${x.ic}</span><span>${esc(x.name)}</span><span class="ct">${s.dex[x.id]}回${s.miss[x.id] ? "・おさらい" : ""}</span></button>` : `<span class="no" role="img" aria-label="まだ並べていない場面"><span class="mk" aria-hidden="true">？</span><span>まだ</span><span class="ct">${LV[x.lv]}</span></span>`).join("")}</div>`).join("")}
+    ${footer()}`;
+  $("back").onclick = home;
+  document.querySelectorAll(".book button").forEach((b) => (b.onclick = () => review(b.dataset.k)));
+  bindFooter(); toTop();
+}
+function review(id) {
+  const P = G.BY[id];
+  app.innerHTML = `<header><button class="icon" id="back" aria-label="手当て帳へ">←</button><h1>${P.ic} ${esc(P.name)}<small>${esc(G.CAT[P.cat])}・${LV[P.lv]}</small></h1></header>
+    <div class="scene"><span class="em" aria-hidden="true">${P.ic}</span><b>${esc(P.name)}</b><p>${esc(P.scene)}</p></div>
+    <div class="review" id="review"><b>手当ての順番</b><ol>${P.steps.map(([t, w]) => `<li>${esc(t)}<small>${esc(w)}</small></li>`).join("")}</ol>
+    ${P.ng.length ? `<b>やってはいけないこと</b><ol>${P.ng.map(([t, w]) => `<li>✕ ${esc(t)}<small>${esc(w)}</small></li>`).join("")}</ol>` : ""}
+    ${P.call ? `<p class="call">🚑 ${esc(P.call)}</p>` : ""}${srcHtml(P)}</div>
+    <button class="main" id="go-one">この場面を並べてみる</button>${footer()}`;
+  $("back").onclick = book; $("go-one").onclick = () => startRun("p", "one:" + id);
+  bindFooter(); toTop();
+}
+function achView() {
+  const s = load(), t = tally(s), got = achGot(s);
+  app.innerHTML = `
+    <header><button class="icon" id="back" aria-label="ホームへ">←</button><h1>実績<small>${got.length}/${ACH.length}</small></h1></header>
+    ${AGRP.map((g, gi) => `<p class="agrp">${g}</p><div class="alist">${ACH.filter((a) => a[3] === gi).map((a) => { const ok = got.includes(a[0]), n = Math.min(t[a[4]], a[5]); return `<div class="ach${ok ? " got" : ""}" data-id="${a[0]}"><span class="ic" aria-hidden="true">🏅</span><b>${ok ? "✓ " : ""}${esc(a[1])}</b><span class="pg">${ok ? "達成" : `${n}/${a[5]}`}</span><small>${esc(a[2])}</small>${ok ? "" : `<span class="bar"><i style="width:${Math.round((n / a[5]) * 100)}%"></i></span>`}</div>`; }).join("")}</div>`).join("")}
+    ${footer()}`;
+  $("back").onclick = home; bindFooter(); toTop();
+}
+const ymOf = (k) => k.slice(0, 7);
+const ymAdd = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
+const lvOf = (rec) => { const t = rec && Array.isArray(rec.m) ? rec.m.reduce((a, b) => a + b, 0) : 9; return t === 0 ? 3 : t <= 2 ? 2 : 1; };
+function cal(ym) {
+  const s = load(), k = todayKey(), late = lateDays(s, k), st = streak(s.days);
+  if (!ym || ym > ymOf(k)) ym = ymOf(k);
+  if (ym < ymOf(EPOCH)) ym = ymOf(EPOCH);
+  const y = +ym.slice(0, 4), m = +ym.slice(5, 7), dow = new Date(Date.UTC(y, m - 1, 1)).getUTCDay(), n = new Date(Date.UTC(y, m, 0)).getUTCDate(), cells = [];
+  for (let i = 0; i < dow; i++) cells.push(`<span class="c off"></span>`);
+  for (let d = 1; d <= n; d++) {
+    const key = `${ym}-${String(d).padStart(2, "0")}`, rec = s.days[key], ar = s.adays[key], hd = s.hdays[key] ? `<span class="hd">上</span>` : "";
+    if (rec) { const lv = lvOf(rec); cells.push(`<span class="c p${lv}" data-k="${key}" role="img" aria-label="${m}月${d}日 星${lv}つ${s.hdays[key] ? "・上級" : ""}">${d}<i>${"★".repeat(lv)}</i>${hd}</span>`); }
+    else if (ar) cells.push(`<span class="c late" data-k="${key}" role="img" aria-label="${m}月${d}日 あとから遊んだ">${d}<i>↺</i></span>`);
+    else if (late.includes(key)) { const go = s.runs[runKey("a", key)]; cells.push(`<button class="c miss" data-k="${key}" aria-label="${m}月${d}日をあとから遊ぶ${go ? "（続きから）" : ""}">${d}<i>${go ? "続き" : "▶"}</i></button>`); }
+    else cells.push(`<span class="c${key === k ? " today" : ""}" data-k="${key}">${d}</span>`);
+  }
+  const pd = playedDays(s);
+  app.innerHTML = `<header><button class="icon" id="back" aria-label="ホームへ">←</button><h1>カレンダー${pd ? `<small>合わせて ${pd}日${st >= 1 ? `・続けて ${st}日` : ""}</small>` : ""}</h1></header>
+    <div class="calnav"><button class="sub" id="prev" aria-label="前の月"${ym <= ymOf(EPOCH) ? " disabled" : ""}>‹</button><b>${y}年${m}月</b><button class="sub" id="next" aria-label="次の月"${ym >= ymOf(k) ? " disabled" : ""}>›</button></div>
+    <div class="cal">${["日", "月", "火", "水", "木", "金", "土"].map((w) => `<span class="wd">${w}</span>`).join("")}${cells.join("")}</div>
+    <div class="legend"><span><em style="background:var(--ao)"></em>★★★ まちがいなし</span><span><em style="background:#cde6e2"></em>★★ 1〜2回</span><span>↺ あとから</span><span>上 上級</span></div>
+    ${late.length ? `<p class="note">▶ の日は、その日の5問をあとから遊べます（過去7日まで・続けた日には数えません）。</p>` : ""}
+    ${footer()}`;
+  $("back").onclick = home; $("prev").onclick = () => cal(ymAdd(ym, -1)); $("next").onclick = () => cal(ymAdd(ym, 1));
+  document.querySelectorAll(".cal .miss").forEach((b) => (b.onclick = () => (lateDays(load()).includes(b.dataset.k) ? startRun("a", b.dataset.k) : cal(ym))));
+  bindFooter(); toTop();
+}
+function about() {
+  const used = [...new Set(G.SCENES.flatMap((x) => x.src))];
+  app.innerHTML = `<header><button class="icon" id="back" aria-label="ホームへ">←</button><h1>このゲームについて</h1></header>
+    <div class="about" id="about">
+      <h3>手当ての順番を、遊んで覚える</h3>
+      <p>けがや急病のとき、何から先にするかを、カードを並べて覚えます。並べ終わると、なぜその順なのか、やってはいけないことは何かが出ます。</p>
+      <h3>中身の出どころ</h3>
+      <p>手当ての手順は、総務省消防庁の「一般市民向け 応急手当WEB講習」、札幌市・千葉市・仙台市の消防局、日本赤十字社の資料に書いてあることから作りました。資料に無いことは足していません。</p>
+      <ul>${used.map((k) => `<li><a href="${G.SRC[k][1]}" target="_blank" rel="noopener">${esc(G.SRC[k][0])}</a></li>`).join("")}</ul>
+      <h3>本当の場面では</h3>
+      <ul>
+        <li>命にかかわるとき・迷ったときは、すぐ119番に電話します。通信指令員が、電話で手当てのしかたを教えてくれます。</li>
+        <li>このゲームは学ぶためのもので、医師の判断や講習の代わりにはなりません。消防署や日本赤十字社の講習で、実際に手を動かして練習するのがおすすめです。</li>
+      </ul>
+    </div>${footer()}`;
+  $("back").onclick = home; bindFooter(); toTop();
+}
+
+window.__tj = { mode: () => MODE, load, save, todayKey, dayNo, lateDays, ACH, achGot, nextAch, tally, shareText, streak, endlessList, cur: () => cur, play: (m) => { if (m) MODE = m; play(); }, home, cal, book, about, EPOCH, KEY, G };
+home();
+if ("serviceWorker" in navigator && location.protocol === "https:" && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
