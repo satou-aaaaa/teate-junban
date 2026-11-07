@@ -215,6 +215,13 @@ try {
   // 練習：分野
   await p.click("#back"); await p.click("#go-p"); await p.click('.lv button[data-c="life"]');
   check("練習の分野を選ぶと、その分野の場面だけ", (await p.evaluate(() => __tj.load().runs.p.list)).every((t) => G.BY[t.split("|")[0]].cat === "life"));
+  // 練習のボタンは全部、押すと場面が出る（2026-11-07「ぜんぶまぜる」でホームに戻っていた。CodeRabbit）
+  for (const t of ["0", "1", "2", "all"]) {
+    await p.click("#back"); await p.click("#go-p"); await p.click(`.lv button[data-t="${t}"]`);
+    const pl = await p.evaluate(() => (__tj.load().runs.p || {}).list || []);
+    const lvs = await p.evaluate((l) => l.map((x) => G.BY[x.split("|")[0]]?.lv), pl);
+    check(`練習「${t}」を押すと、その難しさの場面が並ぶ画面になる`, pl.length > 0 && lvs.every((v) => v !== undefined && (t === "all" || v === +t)) && await p.locator(".cd").count() > 0);
+  }
   // 手当て帳 → 見直し → その場面を並べる
   await p.click("#back"); await p.click("#go-dex");
   const firstId = await p.getAttribute(".book button", "data-k");

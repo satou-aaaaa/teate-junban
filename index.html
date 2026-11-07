@@ -370,7 +370,7 @@ function endlessList(avoid) {
   if (avoid && ids[0] === avoid) { const j = ids.findIndex((x, i) => i > 0 && G.BY[x].lv === 0); [ids[0], ids[j]] = [ids[j], ids[0]]; }
   return ids.map((id, i) => `${id}|e${s}:${i}`);
 }
-function randomTags(lv, n) { const s = rid(), pool = typeof lv === "string" ? [lv] : lv === "all" ? G.SCENES.map((x) => x.id) : G.idsOf(lv); const ids = []; let bag = []; for (let i = 0; i < n; i++) { if (!bag.length) bag = rshuffle(pool); if (bag.length > 1 && bag[0] === ids[ids.length - 1]) bag.push(bag.shift()); ids.push(bag.shift()); } return ids.map((id, i) => `${id}|p${s}:${i}`); }
+function randomTags(lv, n) { const s = rid(), pool = lv === "all" ? G.SCENES.map((x) => x.id) : typeof lv === "string" ? [lv] : G.idsOf(lv); const ids = []; let bag = []; for (let i = 0; i < n; i++) { if (!bag.length) bag = rshuffle(pool); if (bag.length > 1 && bag[0] === ids[ids.length - 1]) bag.push(bag.shift()); ids.push(bag.shift()); } return ids.map((id, i) => `${id}|p${s}:${i}`); }
 const starsOf = (m) => (m === 0 ? 3 : m === 1 ? 2 : 1); // m = まちがい＋ヒントの数
 const starStr = (s) => `<span class="stars" aria-label="星${s}つ">${"★".repeat(s)}<span class="off">${"☆".repeat(3 - s)}</span></span>`;
 

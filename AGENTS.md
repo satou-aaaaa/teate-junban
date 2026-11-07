@@ -36,6 +36,7 @@ node qa/run.mjs   # 場面のデータ（字数・出典）・札の作り方（
 - 見やすさ：`</head>` の前の見やすさの設定（`<!-- a11y:begin -->`〜`end`）は shared-workflows `template/a11y/a11y.html` の写し、`qa/a11y.mjs` は `template/qa/a11y.mjs` の写しで、ここでは直さない。
 - 引き継ぎ：`transfer.js` と `qa/transfer-check.mjs` は shared-workflows `template/` の写しで、ここでは直さない。`data-keys` は `teate-v1,teate-fs`（a11y-v1 は入れない）。記録の形を変えたら QA の `sample` も合わせる。sw.js の `SHELL` から `./transfer.js` を外さない。
 - 押せる所は高さ44px以上・幅320pxで崩れない（QA が見る）。機能を足す・直すたびに `qa/run.mjs` に検査を足す。乱数で組む部分は何百回も作って確かめる（shared-workflows `incidents/2026-10-31-roppo-empty-village.md`）。少し遅れて動く処理（setTimeout）は、画面が替わっていたら何もしない。
+- ボタンを足したら、QA でそのボタンを全部押して、遊ぶ画面まで進むか見る（2026-11-07 練習の「ぜんぶまぜる」だけ検査が無く、押すとホームに戻っていた。CodeRabbit が見つけた）。
 - PWA（`manifest.webmanifest`・`sw.js`・`icon-*.png`）：画面のファイルを足したら `sw.js` の `SHELL` にも足し、中身を大きく変えたら `CACHE` の版を上げる。アイコンは `node tools/make-icons.cjs`、SNS 用の絵 `og.png` は `node tools/make-og.cjs`（今日の問題を入れない）。
 - 公開リポジトリなので、個人情報・鍵を入れない。
 
