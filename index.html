@@ -798,7 +798,7 @@ function about() {
   $("back").onclick = home; bindFooter(); toTop();
 }
 
-window.__tj = { mode: () => MODE, load, save, todayKey, dayNo, lateDays, ACH, achGot, nextAch, tally, shareText, streak, endlessList, cur: () => cur, play: (m) => { if (m) MODE = m; play(); }, home, cal, book, about, EPOCH, KEY, G };
+window.__tj = { mode: () => MODE, load, practiceList, save, todayKey, dayNo, lateDays, ACH, achGot, nextAch, tally, shareText, streak, endlessList, cur: () => cur, play: (m) => { if (m) MODE = m; play(); }, home, cal, book, about, EPOCH, KEY, G };
 home();
 if ("serviceWorker" in navigator && location.protocol === "https:" && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
