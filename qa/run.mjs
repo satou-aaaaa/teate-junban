@@ -370,6 +370,21 @@ try {
     check("見やすさの設定を全部入れても、いちばん下まで動ける（html が固定されない）", r[0] > 0 && r[1] <= r[2] && r[3] === "static", r.join(","));
     await ctx.close();
   }
+  // 札が画面の下のほうでも、押したあとの「✕ しません。理由」「✕ まだです」が画面の中に見える（2026-11-15 週1の改善。前は上級で押した回の3割ほどが画面の外だった）
+  {
+    const ctx = await browser.newContext({ viewport: { width: 360, height: 640 } });
+    const q = await newPage(360, ctx); await closeHow(q);
+    await q.click("#go-h");
+    const out = [];
+    const seen = async (what) => { const r = await q.evaluate(() => { const m = document.getElementById("msg"), b = m.getBoundingClientRect(); return [m.textContent, Math.round(b.top), Math.round(b.bottom), innerHeight]; }); if (!r[0] || r[1] < 0 || r[2] > r[3]) out.push(`${what}:${r.join(",")}`); };
+    for (let i = 0; i < 3; i++) {
+      for (let j; (j = await ngIdx(q)) >= 0;) { await q.click(`.cd[data-j="${j}"]`); await seen(`${i + 1}問目しない札`); }
+      const o = await order(q); await q.click(`.cd[data-j="${o[o.length - 1]}"]`); await seen(`${i + 1}問目まだ`);
+      await solve(q); await q.click("#next"); await q.waitForTimeout(100);
+    }
+    check("スマホ（360×640）で札が画面の下のほうでも、まる・ばつと理由が画面の中に見え、その下の札も押せる", out.length === 0, out.join(" / "));
+    await ctx.close();
+  }
   {
     const q = await newPage(); await closeHow(q);
     await q.focus("#go-d"); await q.keyboard.press("Enter"); await q.waitForTimeout(100);
