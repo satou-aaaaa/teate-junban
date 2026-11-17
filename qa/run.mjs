@@ -258,6 +258,29 @@ try {
   check("とことんはまちがえても続く（次の場面が出る）", await p.locator(".cd").count() > 0 && await p.evaluate(() => __tj.cur().i) === 3);
   await p.click("#quit"); await p.waitForTimeout(150);
   check("「ここで降りる」で終わり、まちがいなしの場面（2）を自己ベストに", (await mem(p)).ebest === 2 && (await p.textContent("#ebest")).includes("2") && (await p.textContent("#eres")).includes("3場面"));
+  // 並べ終えた直後（次へを押す前）でも「ここで降りる」で終われ、その場面が数に入る（前は押しても何も起きなかった）
+  await p.click("#go-e"); await solve(p);
+  check("とことん：並べ終えた直後に「ここで降りる」を押すと結果になり、その場面が数に入る", (await p.textContent("#quit")).includes("1場面で終える") && (await p.click("#quit"), await p.waitForTimeout(150), await p.locator("#eres").count() === 1) && (await p.textContent("#eres")).includes("1場面") && (await p.textContent("#ebest")).includes("まちがいなしの場面 1") && (await mem(p)).runs.e === null);
+  {
+    // 遊び方を Esc で閉じても「見た」が残る（前は「わかった」でしか残らず、Esc で閉じた人に毎回出た）
+    const q = await newPage(); const shown = await q.locator("#howto[open]").count() === 1;
+    await q.keyboard.press("Escape"); await q.reload(); await q.waitForTimeout(200);
+    check("初めて開いて遊び方を Esc で閉じ、開き直すと遊び方が出ない", shown && await q.locator("#howto[open]").count() === 0);
+    await q.context().close();
+  }
+  {
+    // 保存できないブラウザ：帯で知らせ、知らせ続け、保存できたら消す（前は黙って、開き直すと記録が消えた）
+    const sctx = await browser.newContext({ viewport: { width: 390, height: 800 } });
+    await sctx.addInitScript(() => { window.__origSetItem = Storage.prototype.setItem; Storage.prototype.setItem = function () { throw new Error("full"); }; });
+    const q = await newPage(390, sctx); await closeHow(q); await q.click("#go-d"); await solve(q);
+    const one = await q.locator("#savewarn").count() === 1 && (await q.textContent("#savewarn")).includes("保存できませんでした");
+    await q.waitForTimeout(2000);
+    const stay = await q.locator("#savewarn").count() === 1;
+    await q.evaluate(() => { Storage.prototype.setItem = window.__origSetItem; });
+    await q.click("#next"); await solve(q);
+    check("保存できないと帯がちょうど1つ出て2秒たっても残り、保存できるようになったら消える", one && stay && await q.locator("#savewarn").count() === 0, `one=${one} stay=${stay}`);
+    await sctx.close();
+  }
   {
     // とことんの並びを何百回：1つの並びの中で重ならない・つなぎ目で同じ場面を続けない
     const r = await p.evaluate(() => { let bad = 0, joint = 0; for (let i = 0; i < 500; i++) { const a = __tj.endlessList(), ids = a.map((t) => t.split("|")[0]); if (new Set(ids).size !== ids.length || ids.length !== __tj.G.SCENES.length) bad++; const b = __tj.endlessList(ids[ids.length - 1]); if (b[0].split("|")[0] === ids[ids.length - 1]) joint++; } return [bad, joint]; });
