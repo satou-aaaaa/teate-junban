@@ -410,6 +410,19 @@ try {
       check("実績「たしかの目」（自信ありで10場面）・「覚えなおし」（復習で5場面覚えた）が取れる", t.includes("sure10") && t.includes("learn5"), t.join(",")); }
     await q.context().close();
   }
+  // 「自信あり」を押して1枚並べたあと開き直しても、並べ終えたら自信ありで数える（2026-11-17 CodeRabbit）
+  {
+    const q = await newPage(); await closeHow(q);
+    await q.evaluate((t) => __tj.save((s) => { s.runs.p = { mode: "p", date: __tj.todayKey(), list: t, res: [], cur: null, id: "sr" }; }), ["cut|sr1", "scrape|sr2"]);
+    await q.evaluate(() => { Depth.runStart(); __tj.play("p"); });
+    await q.click("#dp-sure"); { const o = await order(q); await q.click(`.cd[data-j="${o[0]}"]`); }
+    await q.reload(); await q.waitForTimeout(150); await q.evaluate(() => __tj.play("p"));
+    check("自信ありで1枚並べたあと開き直しても、自信のボタンは押したまま・変えられない", await q.evaluate(() => __tj.cur().p) === 1 && (await q.getAttribute("#dp-sure", "aria-pressed")) === "true" && await q.locator("#dp-sure:disabled").count() === 1);
+    await solve(q);
+    const r = await q.evaluate(() => [__tj.load().runs.p.ds, JSON.parse(localStorage.getItem("teate-depth") || "{}")]);
+    check("開き直したあと並べ終えても、自信ありで当てたと数える（画面・回の数・通しの数）", (await q.textContent(".verdict")).includes("自信ありで、まちがえずに並べた") && r[0] && r[0].n === 1 && r[0].ok === 1 && r[1].sure === 1 && r[1].sureOk === 1, JSON.stringify([r[0], r[1].sure, r[1].sureOk]));
+    await q.context().close();
+  }
 
   // 古いタブ：同じ問題を2つのタブで開き、片方で並べ終えたら、もう片方は二重に入れない
   {
