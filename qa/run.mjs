@@ -185,7 +185,10 @@ try {
     }
     await solve(p); await p.click("#next");
   }
-  check("今日の5問のどこかに、やってはいけない札が出る", ngHit);
+  // しない札の無い場面（arm-fx など8場面）だけが3〜5問目に並ぶ日は、年に6日ほどある（2026-11-17 はその日で、QA が日付で落ちた）。その日はデータでそうなっていることを確かめる
+  const noNgToday = G.dailyTags(TODAY).slice(2).every((t) => !G.make(t).cards.some((x) => x.k === "n"));
+  check("今日の5問のどこかに、やってはいけない札が出る（しない札の無い場面だけの日を除く）", ngHit || noNgToday, noNgToday ? "今日の3〜5問目はしない札の無い場面だけ" : "");
+  check("しない札の無い場面だけが3〜5問目に並ぶ日は、年に10日より少ない", (() => { let n = 0; for (let i = 0; i < 365; i++) { const d = new Date(Date.UTC(2026, 10, 7 + i)).toISOString().slice(0, 10); if (G.dailyTags(d).slice(2).every((t) => !G.make(t).cards.some((x) => x.k === "n"))) n++; } return n < 10; })());
   await p.waitForTimeout(150);
   const s1 = await mem(p);
   check("5問で結果：今日の記録に1問ごとのまちがい（1・2・…）", s1.days[TODAY] && s1.days[TODAY].m[0] === 1 && s1.days[TODAY].m[1] === 2 && s1.days[TODAY].m.length === 5);
@@ -426,6 +429,10 @@ try {
       const v = await r.evaluate(() => { const e = [...document.querySelectorAll(".title")].find((x) => x.offsetParent); if (!e) return null; const h = e.getBoundingClientRect().height; const f = e.style.flex; e.style.flex = "none"; const n = e.getBoundingClientRect().height; e.style.flex = f; return h - n; });
       if (v === null || v > 4) big.push(`${w}x${h}:${v === null ? "題なし" : "+" + Math.round(v) + "px"}`); }
     check("ホームの題は縦長の画面でも縦に伸びない（820×1180・390×844・1280×800）", big.length === 0, big.join(" ")); await c.close(); }
+{ // 知らせ（.toast）は下のボタンを塞がない（shared-workflows incidents/2026-11-17-known-game-bugs-spread.md）
+  const pt = await browser.newPage(); await pt.goto(url);
+  check("知らせ（.toast）が出ていても、その下のボタンを押せる（pointer-events:none）", await pt.evaluate(() => { const d = document.createElement("div"); d.className = "toast"; document.body.appendChild(d); const v = getComputedStyle(d).pointerEvents; d.remove(); return v === "none"; }));
+  await pt.close(); }
 await browser.close();
 server.close();
 check("画面のエラーが無い", errors.length === 0, errors.slice(0, 3).join(" | "));
