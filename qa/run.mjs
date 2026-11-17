@@ -381,7 +381,7 @@ try {
         if (ov > 0) bad.push(`${w}px 文字${fs} ${go || "ホーム"} ${ov}px`);
         // 動きの途中で測らない（2026-11-07 CI で1回だけ出典のリンクが44px未満と出た。値と display も残して原因を追えるようにする）
         await q.evaluate(() => Promise.race([Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {}))), new Promise((r) => setTimeout(r, 1000))]));
-        small.push(...(await q.$$eval("button:not([disabled]), a[href]", (bs) => bs.filter((b) => b.checkVisibility() && !b.closest(".cal")).filter((b) => b.getBoundingClientRect().height < 44).map((b) => `${(b.id || b.className || b.textContent).slice(0, 20)} ${b.getBoundingClientRect().height.toFixed(2)}px ${getComputedStyle(b).display}`))).map((x) => `${w}/${fs}/${go}:${x}`));
+        small.push(...(await q.$$eval("button:not([disabled]), a[href]", (bs) => bs.filter((b) => b.checkVisibility() && !b.closest(".cal")).filter((b) => Math.round(b.getBoundingClientRect().height) < 44).map((b) => `${(b.id || b.className || b.textContent).slice(0, 20)} ${b.getBoundingClientRect().height.toFixed(2)}px ${getComputedStyle(b).display}`))).map((x) => `${w}/${fs}/${go}:${x}`));
       }
       await q.context().close();
     }
