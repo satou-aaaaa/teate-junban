@@ -26,15 +26,16 @@ node qa/run.mjs   # 場面のデータ（字数・出典）・札の作り方（
 - 好きなだけ遊べる：チケット・回数制限・🔒で開くモードを入れない（2026-11-06 satou さん。QA が見る）。上級・とことん・練習ははじめから押せる（今日の5問・上級は1日1回）。
 - とことん（`runs.e`）：全部の場面をやさしい→ふつう→むずかしいの順に毎回ちがう並びで出し（`endlessList`。1つの並びの中で同じ場面は出ない）、使い切ったら新しい並びを足して続ける（つなぎ目で同じ場面を続けない）。まちがえても終わらず「ここで降りる」まで続く。自己ベスト `ebest` はまちがいなしで並べた場面の数。今日の記録・連続・Ko-fi・シェアには数えない（手当て帳・おさらいには入る）。他の人との順位は出さない。
 - おさらい（`miss`）：まちがえた・ヒントを使った場面を覚え、ホームの「まちがえた場面のおさらい」で出す。まちがいなしで並べると外す（間をあけてくり返す。shared-workflows `routines/game-dev.md` 研究の要点 18）。
-- 記録 `teate-v1`：`days`・`hdays`・`adays`（あとから）・`dex`（手当て帳）・`miss`・`runs`（`d`・`h`・`p`・`e`・`a:日付`）・`ach`・`kofi`・`ebest`。`load` は合わせる前に両方を `fresh()` で補い、`tidy` で形を直す。書き込む前に、保存した進み具合がこの画面と同じ回か確かめる（`same`）。途中の保存（`keep`）は、別のタブの並べた数・まちがい・ヒントを減らさない（shared-workflows `incidents/2026-11-04-daily-game-save-gaps.md`）。
-- 実績（`ACH`、14個）は今の記録から毎回数える（新しく残すのは知らせ終えた印 `ach` だけ）。続けるは合計の日数（`playedDays`）。連続の日は1以上のときだけ出す。取りこぼした日（きのう〜7日前・`EPOCH` から）はカレンダーからあとから遊べ、連続・今日の記録・Ko-fi・シェアには数えない。
+- 記録 `teate-v1`：`days`・`hdays`・`adays`（あとから）・`dex`（手当て帳）・`miss`・`runs`（`d`・`h`・`p`・`e`・`r`（復習）・`a:日付`）・`ach`・`kofi`・`ebest`。`load` は合わせる前に両方を `fresh()` で補い、`tidy` で形を直す。書き込む前に、保存した進み具合がこの画面と同じ回か確かめる（`same`）。途中の保存（`keep`）は、別のタブの並べた数・まちがい・ヒントを減らさない（shared-workflows `incidents/2026-11-04-daily-game-save-gaps.md`）。
+- 深さ（shared-workflows `template/depth.js` の写し。ここでは直さない）：1枚目を押す前だけ押せる「🎯 自信あり？」（見立ては「全部まちがえずに並べられる」。最初のまちがいか、まちがいなしで並べ終えたときに当たりを決める）と、まちがえた・ヒントを使った場面が1日後→3日後→7日後に戻る「復習」（`runs.r`）。記録は別のキー `teate-depth`。鍵は `場面|種` で、起動時に `Depth.setValid` で作り直せる鍵だけ数える。復習は今日の記録・連続・Ko-fi・カレンダーに数えない（手当て帳・おさらいには入る）。
+- 実績（`ACH`、16個。うち2つは深さの `Depth.stats()`）は今の記録から毎回数える（新しく残すのは知らせ終えた印 `ach` だけ）。続けるは合計の日数（`playedDays`）。連続の日は1以上のときだけ出す。取りこぼした日（きのう〜7日前・`EPOCH` から）はカレンダーからあとから遊べ、連続・今日の記録・Ko-fi・シェアには数えない。
 - 色だけで分けない：並べた枠は ✓ と番号、しない札は ✕・取り消し線・破線、ヒントの札は 👉、取れない星は ☆、カレンダーは ★ の数・↺・▶。「色の見分けを助ける」ではしない札を橙の太い破線、並べた枠を青にする。
 - 共有は遊ぶ人が押したときに開くリンク（X・LINE・Web Share・コピー）だけ。シェアの文に場面の名前・答えを出さない（QA が見る）。
 - 感想は「感想を送る」から GitHub の Issue フォーム（`.github/ISSUE_TEMPLATE/feedback.yml`、name は「感想フォーム」）を開くだけ。名前・メールは聞かない。
 - 応援は Ko-fi（https://ko-fi.com/satouaaaaa）へのただのリンクだけ。今日の5問・上級を初めて全部まちがいなしで終えたときだけ、結果の画面の下に1行。遊ぶのは無料のまま、有料版は置かない。
 - 外へ通信しない。外から読むのは Google Fonts の文字だけ（CSP の `connect-src 'self'` を広げない）。記録は遊ぶ人のブラウザ（localStorage）だけ。
 - 見やすさ：`</head>` の前の見やすさの設定（`<!-- a11y:begin -->`〜`end`）は shared-workflows `template/a11y/a11y.html` の写し、`qa/a11y.mjs` は `template/qa/a11y.mjs` の写しで、ここでは直さない。
-- 引き継ぎ：`transfer.js` と `qa/transfer-check.mjs` は shared-workflows `template/` の写しで、ここでは直さない。`data-keys` は `teate-v1,teate-fs`（a11y-v1 は入れない）。記録の形を変えたら QA の `sample` も合わせる。sw.js の `SHELL` から `./transfer.js` を外さない。
+- 引き継ぎ：`transfer.js` と `qa/transfer-check.mjs` は shared-workflows `template/` の写しで、ここでは直さない。`data-keys` は `teate-v1,teate-fs,teate-depth`（a11y-v1 は入れない）。記録の形を変えたら QA の `sample` も合わせる。sw.js の `SHELL` から `./transfer.js` を外さない。
 - 押せる所は高さ44px以上・幅320pxで崩れない（QA が見る）。機能を足す・直すたびに `qa/run.mjs` に検査を足す。乱数で組む部分は何百回も作って確かめる（shared-workflows `incidents/2026-10-31-roppo-empty-village.md`）。少し遅れて動く処理（setTimeout）は、画面が替わっていたら何もしない。
 - ボタンを足したら、QA でそのボタンを全部押して、遊ぶ画面まで進むか見る（2026-11-07 練習の「ぜんぶまぜる」だけ検査が無く、押すとホームに戻っていた。CodeRabbit が見つけた）。
 - PWA（`manifest.webmanifest`・`sw.js`・`icon-*.png`）：画面のファイルを足したら `sw.js` の `SHELL` にも足し、中身を大きく変えたら `CACHE` の版を上げる。アイコンは `node tools/make-icons.cjs`、SNS 用の絵 `og.png` は `node tools/make-og.cjs`（今日の問題を入れない）。
