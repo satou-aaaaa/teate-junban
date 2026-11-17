@@ -185,7 +185,10 @@ try {
     }
     await solve(p); await p.click("#next");
   }
-  check("今日の5問のどこかに、やってはいけない札が出る", ngHit);
+  // しない札の無い場面（arm-fx など8場面）だけが3〜5問目に並ぶ日は、年に6日ほどある（2026-11-17 はその日で、QA が日付で落ちた）。その日はデータでそうなっていることを確かめる
+  const noNgToday = G.dailyTags(TODAY).slice(2).every((t) => !G.make(t).cards.some((x) => x.k === "n"));
+  check("今日の5問のどこかに、やってはいけない札が出る（しない札の無い場面だけの日を除く）", ngHit || noNgToday, noNgToday ? "今日の3〜5問目はしない札の無い場面だけ" : "");
+  check("しない札の無い場面だけが3〜5問目に並ぶ日は、年に10日より少ない", (() => { let n = 0; for (let i = 0; i < 365; i++) { const d = new Date(Date.UTC(2026, 10, 7 + i)).toISOString().slice(0, 10); if (G.dailyTags(d).slice(2).every((t) => !G.make(t).cards.some((x) => x.k === "n"))) n++; } return n < 10; })());
   await p.waitForTimeout(150);
   const s1 = await mem(p);
   check("5問で結果：今日の記録に1問ごとのまちがい（1・2・…）", s1.days[TODAY] && s1.days[TODAY].m[0] === 1 && s1.days[TODAY].m[1] === 2 && s1.days[TODAY].m.length === 5);
@@ -258,6 +261,29 @@ try {
   check("とことんはまちがえても続く（次の場面が出る）", await p.locator(".cd").count() > 0 && await p.evaluate(() => __tj.cur().i) === 3);
   await p.click("#quit"); await p.waitForTimeout(150);
   check("「ここで降りる」で終わり、まちがいなしの場面（2）を自己ベストに", (await mem(p)).ebest === 2 && (await p.textContent("#ebest")).includes("2") && (await p.textContent("#eres")).includes("3場面"));
+  // 並べ終えた直後（次へを押す前）でも「ここで降りる」で終われ、その場面が数に入る（前は押しても何も起きなかった）
+  await p.click("#go-e"); await solve(p);
+  check("とことん：並べ終えた直後に「ここで降りる」を押すと結果になり、その場面が数に入る", (await p.textContent("#quit")).includes("1場面で終える") && (await p.click("#quit"), await p.waitForTimeout(150), await p.locator("#eres").count() === 1) && (await p.textContent("#eres")).includes("1場面") && (await p.textContent("#ebest")).includes("まちがいなしの場面 1") && (await mem(p)).runs.e === null);
+  {
+    // 遊び方を Esc で閉じても「見た」が残る（前は「わかった」でしか残らず、Esc で閉じた人に毎回出た）
+    const q = await newPage(); const shown = await q.locator("#howto[open]").count() === 1;
+    await q.keyboard.press("Escape"); await q.reload(); await q.waitForTimeout(200);
+    check("初めて開いて遊び方を Esc で閉じ、開き直すと遊び方が出ない", shown && await q.locator("#howto[open]").count() === 0);
+    await q.context().close();
+  }
+  {
+    // 保存できないブラウザ：帯で知らせ、知らせ続け、保存できたら消す（前は黙って、開き直すと記録が消えた）
+    const sctx = await browser.newContext({ viewport: { width: 390, height: 800 } });
+    await sctx.addInitScript(() => { window.__origSetItem = Storage.prototype.setItem; Storage.prototype.setItem = function () { throw new Error("full"); }; });
+    const q = await newPage(390, sctx); await closeHow(q); await q.click("#go-d"); await solve(q);
+    const one = await q.locator("#savewarn").count() === 1 && (await q.textContent("#savewarn")).includes("保存できませんでした");
+    await q.waitForTimeout(2000);
+    const stay = await q.locator("#savewarn").count() === 1;
+    await q.evaluate(() => { Storage.prototype.setItem = window.__origSetItem; });
+    await q.click("#next"); await solve(q);
+    check("保存できないと帯がちょうど1つ出て2秒たっても残り、保存できるようになったら消える", one && stay && await q.locator("#savewarn").count() === 0, `one=${one} stay=${stay}`);
+    await sctx.close();
+  }
   {
     // とことんの並びを何百回：1つの並びの中で重ならない・つなぎ目で同じ場面を続けない
     const r = await p.evaluate(() => { let bad = 0, joint = 0; for (let i = 0; i < 500; i++) { const a = __tj.endlessList(), ids = a.map((t) => t.split("|")[0]); if (new Set(ids).size !== ids.length || ids.length !== __tj.G.SCENES.length) bad++; const b = __tj.endlessList(ids[ids.length - 1]); if (b[0].split("|")[0] === ids[ids.length - 1]) joint++; } return [bad, joint]; });
@@ -403,6 +429,10 @@ try {
       const v = await r.evaluate(() => { const e = [...document.querySelectorAll(".title")].find((x) => x.offsetParent); if (!e) return null; const h = e.getBoundingClientRect().height; const f = e.style.flex; e.style.flex = "none"; const n = e.getBoundingClientRect().height; e.style.flex = f; return h - n; });
       if (v === null || v > 4) big.push(`${w}x${h}:${v === null ? "題なし" : "+" + Math.round(v) + "px"}`); }
     check("ホームの題は縦長の画面でも縦に伸びない（820×1180・390×844・1280×800）", big.length === 0, big.join(" ")); await c.close(); }
+{ // 知らせ（.toast）は下のボタンを塞がない（shared-workflows incidents/2026-11-17-known-game-bugs-spread.md）
+  const pt = await browser.newPage(); await pt.goto(url);
+  check("知らせ（.toast）が出ていても、その下のボタンを押せる（pointer-events:none）", await pt.evaluate(() => { const d = document.createElement("div"); d.className = "toast"; document.body.appendChild(d); const v = getComputedStyle(d).pointerEvents; d.remove(); return v === "none"; }));
+  await pt.close(); }
 await browser.close();
 server.close();
 check("画面のエラーが無い", errors.length === 0, errors.slice(0, 3).join(" | "));
