@@ -144,7 +144,7 @@ async function solve(p, { early = 0 } = {}) {
 
 try {
   const p = await newPage();
-  check("はじめて開くと遊び方が出る", await p.locator("#core-coach").count() === 1);
+  check("はじめて開くと遊び方が出る", await p.locator("#core-coach").waitFor({ timeout: 3000 }).then(() => true, () => false));
   await firstClose(p);
   check("ホームに「本当の場面では、すぐ119番」の注意", (await p.textContent(".warn")).includes("119番"));
   check("上級・とことん・練習ははじめから押せる（鍵なし）", await p.locator("#go-h:not([disabled])").count() === 1 && await p.locator("#go-e:not([disabled])").count() === 1 && await p.locator("#go-p:not([disabled])").count() === 1);
@@ -268,7 +268,7 @@ try {
   check("とことん：並べ終えた直後に「ここで降りる」を押すと結果になり、その場面が数に入る", (await p.textContent("#quit")).includes("1場面で終える") && (await p.click("#quit"), await p.waitForTimeout(150), await p.locator("#eres").count() === 1) && (await p.textContent("#eres")).includes("1場面") && (await p.textContent("#ebest")).includes("まちがいなしの場面 1") && (await mem(p)).runs.e === null);
   {
     // 遊び方を Esc で閉じても「見た」が残る（前は「わかった」でしか残らず、Esc で閉じた人に毎回出た）
-    const q = await newPage(); const shown = await q.locator("#core-coach").count() === 1;
+    const q = await newPage(); const shown = await q.locator("#core-coach").waitFor({ timeout: 3000 }).then(() => true, () => false);
     await q.keyboard.press("Escape"); await q.reload(); await q.waitForTimeout(200);
     check("初めて開いて遊び方を Esc で閉じ、開き直すと遊び方が出ない", shown && await q.locator("#howto[open]").count() === 0);
     await q.context().close();
