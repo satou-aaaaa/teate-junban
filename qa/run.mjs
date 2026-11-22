@@ -15,6 +15,7 @@ import { checkDepth } from "./depth-check.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok: !!ok, detail: String(detail).slice(0, 400) });
+const firstClose = async (q) => { if (await q.locator("#howto[open]").count()) await q.click("#howto-ok"); if (await q.locator("#core-coach").count()) { await q.evaluate(() => Core.coach.leave()); await q.waitForTimeout(100); } }; // はじめての練習の吹き出しをやめてホームへ（sync-template の migrateFirstQa が足した）
 const G = createRequire(import.meta.url)(path.join(root, "data.js"));
 const len = (t) => [...t].length;
 
@@ -129,7 +130,7 @@ async function newPage(w = 390, ctx) {
   await p.goto(url); await p.waitForTimeout(200);
   return p;
 }
-const closeHow = async (p) => { if (await p.locator("#howto[open]").count()) await p.click("#howto-ok"); };
+const closeHow = async (p) => { await firstClose(p); };
 const order = (p) => p.evaluate(() => { const c = __tj.cur(); return c.P.cards.map((x, j) => [x, j]).filter(([x]) => x.k === "s").sort((a, b) => a[0].o - b[0].o).map(([, j]) => j); });
 const ngIdx = (p) => p.evaluate(() => { const c = __tj.cur(); return c.P.cards.findIndex((x, j) => x.k === "n" && !c.ngs.includes(j)); });
 const mem = (p) => p.evaluate(() => JSON.parse(localStorage.getItem("teate-v1") || "{}"));
@@ -143,8 +144,8 @@ async function solve(p, { early = 0 } = {}) {
 
 try {
   const p = await newPage();
-  check("はじめて開くと遊び方が出る", await p.locator("#howto[open]").count() === 1);
-  await p.click("#howto-ok");
+  check("はじめて開くと遊び方が出る", await p.locator("#core-coach").count() === 1);
+  await firstClose(p);
   check("ホームに「本当の場面では、すぐ119番」の注意", (await p.textContent(".warn")).includes("119番"));
   check("上級・とことん・練習ははじめから押せる（鍵なし）", await p.locator("#go-h:not([disabled])").count() === 1 && await p.locator("#go-e:not([disabled])").count() === 1 && await p.locator("#go-p:not([disabled])").count() === 1);
   await p.click('.fsrow button[data-fs="3"]'); await p.reload(); await p.waitForTimeout(150);
@@ -267,7 +268,7 @@ try {
   check("とことん：並べ終えた直後に「ここで降りる」を押すと結果になり、その場面が数に入る", (await p.textContent("#quit")).includes("1場面で終える") && (await p.click("#quit"), await p.waitForTimeout(150), await p.locator("#eres").count() === 1) && (await p.textContent("#eres")).includes("1場面") && (await p.textContent("#ebest")).includes("まちがいなしの場面 1") && (await mem(p)).runs.e === null);
   {
     // 遊び方を Esc で閉じても「見た」が残る（前は「わかった」でしか残らず、Esc で閉じた人に毎回出た）
-    const q = await newPage(); const shown = await q.locator("#howto[open]").count() === 1;
+    const q = await newPage(); const shown = await q.locator("#core-coach").count() === 1;
     await q.keyboard.press("Escape"); await q.reload(); await q.waitForTimeout(200);
     check("初めて開いて遊び方を Esc で閉じ、開き直すと遊び方が出ない", shown && await q.locator("#howto[open]").count() === 0);
     await q.context().close();
@@ -499,7 +500,7 @@ try {
 // 引き継ぎコード
 try {
   const sample = { "teate-v1": JSON.stringify({ v: 1, tut: true, days: { "2026-11-07": { m: [0, 1, 0, 0, 2], k: ["cut", "scrape", "bee", "tooth", "aed"] } }, hdays: {}, adays: {}, dex: { cut: 1, scrape: 1, bee: 1, tooth: 1, aed: 1 }, miss: { aed: "2026-11-07" }, runs: {}, kofi: {}, ach: {}, ebest: 7, t: 1 }), "teate-fs": "3", "teate-depth": JSON.stringify({ v: 1, rv: { "cut|x1": { s: 1, due: "2026-11-20", t: 5 } } }) }; // 復習の記録も引き継ぐかを見る
-  await checkTransfer({ browser, url, game: "teate-junban", sample, check, open: async (pg) => { if (await pg.locator("#howto[open]").count()) await pg.click("#howto-ok"); } });
+  await checkTransfer({ browser, url, game: "teate-junban", sample, check, open: async (pg) => { await firstClose(pg); } });
 } catch (e) { check("引き継ぎの検査が最後まで動く", false, e.message.split("\n")[0]); }
   { const c = await browser.newContext(); const r = await c.newPage(); const big = []; // 題が h1{flex:1} で縦に伸び（伸びない形と比べて4pxより高ければ失敗）、iPad の縦で大きなすき間が出た（shared-workflows incidents/2026-11-07-title-stretched.md）
     for (const [w, h] of [[820, 1180], [390, 844], [1280, 800]]) { await r.setViewportSize({ width: w, height: h }); await r.goto(url); await r.waitForTimeout(200); await r.keyboard.press("Escape"); await r.waitForTimeout(100);
